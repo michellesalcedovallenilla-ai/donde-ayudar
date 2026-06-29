@@ -1,9 +1,10 @@
-# Netlify deploy for the Donde Ayudar DESIGN MOCKUP (Claude Design handoff bundle).
-# Static files only — no build step. Entry is index.html -> "Donde Ayudar.dc.html".
-#
-# NOTE: this publishes the prototype, not the Astro site. To deploy the Astro
-# site instead, set: command = "npm run build" and publish = "dist".
+# Netlify build for Donde Ayudar — Astro site serving the design mockup.
+# The mockup lives in public/ (index.html + support.js + content.js + assets/)
+# and is served by the Astro build. Security/caching headers in public/_headers.
 
 [build]
-  command = "echo 'static mockup — no build'"
-  publish = "Mejora UXUI Donde Ayudar-handoff/mejora-ux-ui-donde-ayudar/project"
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"

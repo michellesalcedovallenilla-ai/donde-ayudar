@@ -18,6 +18,12 @@
         "Mejora UXUI Donde Ayudar-handoff/mejora-ux-ui-donde-ayudar/project"
       ],
       "port": 4322
+    },
+    {
+      "name": "dist-preview",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "4323", "--directory", "dist"],
+      "port": 4323
     }
   ]
 }
