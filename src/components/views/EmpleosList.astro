@@ -1,0 +1,89 @@
+---
+import type { Lang } from '../../data/types';
+import { useStrings } from '../../data/strings';
+import { empleos } from '../../data/empleos';
+import JobCard from '../JobCard.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useStrings(lang);
+
+const sorted = [...empleos].sort((a, b) => (a.date < b.date ? 1 : -1));
+
+const filters = [
+  { key: 'todas', label: t.fTodas, count: sorted.length },
+  { key: 'remoto', label: t.fRemoto, count: sorted.filter((e) => e.mode === 'remoto').length },
+  { key: 'presencial', label: t.fPresencial, count: sorted.filter((e) => e.mode === 'presencial').length },
+  { key: 'hibrido', label: t.fHibrido, count: sorted.filter((e) => e.mode === 'hibrido').length },
+];
+---
+
+<section class="page-hero yellow">
+  <div class="container">
+    <p class="eyebrow red">{t.empleosPEyebrow}</p>
+    <h1 class="h1">{t.empleosPH1}</h1>
+    <p class="lead">{t.empleosPLead}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="notice warn notice-mb">
+      <Icon name="info" size={21} class="ico" />
+      <p><strong>{t.empleosNoticeT}</strong>{t.empleosNoticeX}</p>
+    </div>
+
+    <div class="chips filter-chips" role="group" aria-label={t.empleosPEyebrow}>
+      {
+        filters.map((f, i) => (
+          <button type="button" class="chip" data-filter={f.key} aria-pressed={i === 0 ? 'true' : 'false'}>
+            {f.label}
+            <span class="count">{f.count}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="empty-state" data-empty hidden>{t.empleosEmpty}</div>
+
+    <div class="grid grid-cards" data-grid>
+      {sorted.map((empleo) => <JobCard empleo={empleo} lang={lang} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .notice-mb {
+    margin-bottom: 26px;
+  }
+  .filter-chips {
+    margin-bottom: 26px;
+  }
+</style>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.filter-chips .chip');
+  const cards = document.querySelectorAll<HTMLElement>('[data-grid] .job-card');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+
+  function apply(filter: string) {
+    let visible = 0;
+    cards.forEach((card) => {
+      const show = filter === 'todas' || card.dataset.mode === filter;
+      card.hidden = !show;
+      if (show) visible++;
+    });
+    if (empty) empty.hidden = visible !== 0;
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.setAttribute('aria-pressed', 'false'));
+      chip.setAttribute('aria-pressed', 'true');
+      apply(chip.dataset.filter || 'todas');
+    });
+  });
+</script>

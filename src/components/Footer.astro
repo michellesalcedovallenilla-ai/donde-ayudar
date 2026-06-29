@@ -1,48 +1,142 @@
 ---
-const year = new Date().getFullYear();
+import type { Lang } from '../data/types';
+import { useStrings } from '../data/strings';
+import { mainNav, paths, generalInbox } from '../data/site';
+import { href } from '../i18n/utils';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useStrings(lang);
 ---
 
 <footer class="site-footer">
   <div class="container">
-    <div class="footer-grid">
-      <div class="footer-brand">
-        <img src="/logo.png" alt="Donde Ayudar" width="180" height="54" />
-        <p class="footer-tagline">
-          Conecta ayuda. Abre oportunidades. Reconstruimos juntos.
-        </p>
-        <p class="footer-tagline" style="font-size:0.88rem">
-          La ayuda inmediata resuelve el presente, pero el empleo remoto puede
-          reconstruir estabilidad.
-        </p>
+    <div class="cols">
+      <div class="about">
+        <span class="brand">
+          <span class="mark"><img src="/assets/logo-icon.png" alt="" width="30" height="30" /></span>
+          <span class="name">Donde Ayudar</span>
+        </span>
+        <p class="tag">{t.footTag}</p>
+        <p class="msg">{t.footMsg}</p>
       </div>
 
       <div>
-        <h4>Explorar</h4>
+        <h2>{t.footExplorar}</h2>
         <ul>
-          <li><a href="/casos">Casos verificados</a></li>
-          <li><a href="/empleos">Empleos remotos</a></li>
-          <li><a href="/organizaciones">Organizaciones</a></li>
-          <li><a href="/como-funciona">Cómo funciona</a></li>
+          {
+            mainNav.map((item) => (
+              <li>
+                <a href={href(item.path, lang)}>{t[item.label]}</a>
+              </li>
+            ))
+          }
         </ul>
       </div>
 
       <div>
-        <h4>Participar</h4>
+        <h2>{t.footParticipar}</h2>
         <ul>
-          <li><a href="/publicar-oportunidad">Publicar una oportunidad</a></li>
-          <li><a href="/publicar-oportunidad#organizacion">Conectar una organización</a></li>
-          <li><a href="/privacidad">Privacidad y seguridad</a></li>
-          <li><a href="mailto:hola@dondeayudar.example">Contacto</a></li>
+          <li><a href={href(paths.publicar, lang)}>{t.footPublicar}</a></li>
+          <li><a href={href(paths.publicar, lang)}>{t.footConectar}</a></li>
+          <li><a href={`mailto:${generalInbox}`}>{t.footContacto}</a></li>
+          <li><a href={href(paths.privacidad, lang)}>{lang === 'es' ? 'Privacidad' : 'Privacy'}</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="footer-bottom">
-      <p style="margin:0">
-        Esta plataforma no almacena documentos personales ni procesa pagos. La verificación
-        ocurre a través de organizaciones o voluntarios aliados.
-      </p>
-      <p style="margin:0.4rem 0 0">© {year} Donde Ayudar · Proyecto comunitario sin fines de lucro.</p>
+    <div class="legal">
+      <p>{t.footLegal}</p>
+      <p class="copy">{t.footCopy}</p>
     </div>
   </div>
 </footer>
+
+<style>
+  .site-footer {
+    background: var(--band);
+    color: rgba(255, 255, 255, 0.82);
+    padding: clamp(40px, 6vw, 56px) 0 28px;
+  }
+  .cols {
+    display: grid;
+    gap: 36px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  .about {
+    max-width: 38ch;
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .name {
+    font-weight: 700;
+    font-size: 18px;
+    color: #fff;
+  }
+  .tag {
+    color: #fff;
+    font-weight: 600;
+    margin: 0 0 8px;
+    font-size: 15px;
+  }
+  .msg {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+  }
+  h2 {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0 0 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 10px;
+    font-size: 14.5px;
+  }
+  ul a {
+    color: rgba(255, 255, 255, 0.85);
+  }
+  ul a:hover {
+    color: var(--yel);
+  }
+  .legal {
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    margin-top: 34px;
+    padding-top: 20px;
+  }
+  .legal p {
+    margin: 0;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.72);
+    line-height: 1.6;
+    max-width: 80ch;
+  }
+  .legal .copy {
+    margin-top: 8px;
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.55);
+  }
+</style>

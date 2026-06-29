@@ -1,13 +1,14 @@
-# Security/caching headers for the Astro build that serves the Donde Ayudar mockup.
-# CSP is permissive on purpose: the prototype runtime needs 'unsafe-eval'
-# (Babel/new Function) and loads React/Lucide from unpkg.
+# Security + caching headers for the Donde Ayudar static Astro site (Netlify).
+# Fully static, first-party assets only. The only third party is Google Fonts
+# (stylesheet on fonts.googleapis.com, font files on fonts.gstatic.com).
+# Keep this in sync with vercel.json.
 
 /*
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: blob:; connect-src 'self' https://unpkg.com; form-action 'self' mailto:; frame-ancestors 'none'; base-uri 'self'
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'self' mailto:; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
-  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 
 /_astro/*

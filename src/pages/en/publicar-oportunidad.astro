@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Publicar from '../../components/views/Publicar.astro';
+import { useStrings } from '../../data/strings';
+const lang = 'en' as const;
+const t = useStrings(lang);
+---
+
+<BaseLayout title={t.pubH1} description={t.pubLead} lang={lang}>
+  <Publicar lang={lang} />
+</BaseLayout>

@@ -1,52 +1,130 @@
 ---
+import type { Caso, Lang } from '../data/types';
+import { pick } from '../data/types';
+import { useStrings } from '../data/strings';
+import { casoPath } from '../data/site';
+import { href } from '../i18n/utils';
 import Badge from './Badge.astro';
-import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
 
 interface Props {
-  caso: CollectionEntry<'casos'>;
+  caso: Caso;
+  lang: Lang;
 }
+const { caso, lang } = Astro.props;
+const t = useStrings(lang);
 
-const { caso } = Astro.props;
-const { data, id } = caso;
+const statusMeta = {
+  verified: { variant: 'verified' as const, label: t.stVerificado },
+  urgent: { variant: 'urgent' as const, label: t.stUrgente },
+  pending: { variant: 'pending' as const, label: t.stPendiente },
+}[caso.status];
 
-const statusVariant = data.status; // 'verified' | 'pending' | 'urgent'
-const mainNeed = data.needs[0];
-const topSkills = data.skills.slice(0, 3);
+const needs = pick(caso.needs, lang);
+const skills = pick(caso.skills, lang).slice(0, 3);
+const hasDonation = caso.status !== 'pending' && (caso.donationMethods?.length ?? 0) > 0;
+const ctaLabel = hasDonation ? t.verFormas : t.verCaso;
 ---
 
-<article class="card">
-  <div class="tag-row" style="justify-content:space-between; align-items:center">
-    <Badge variant={statusVariant} dot />
-    <span class="muted" style="font-size:0.85rem">📍 {data.location}</span>
+<a
+  href={href(casoPath(caso.id), lang)}
+  class="card card-link caso-card"
+  data-status={caso.status}
+  data-donation={hasDonation ? 'true' : 'false'}
+>
+  <div class="row">
+    <Badge variant={statusMeta.variant} label={statusMeta.label} dot />
+    <span class="meta"><Icon name="map-pin" size={14} />{pick(caso.location, lang)}</span>
   </div>
-
-  <h3><a href={`/casos/${id}/`}>{data.title}</a></h3>
-
-  <p class="muted" style="margin:0; font-size:0.95rem">{data.summary}</p>
-
-  {
-    mainNeed && (
-      <div>
-        <span class="muted" style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em">
-          Necesidad principal
+  <h3>{pick(caso.title, lang)}</h3>
+  <p class="summary">{pick(caso.summary, lang)}</p>
+  <div>
+    <span class="kicker">{t.necesidadPrincipal}</span>
+    <div class="main-need">{needs[0]}</div>
+  </div>
+  <ul class="pill-list">
+    {skills.map((s) => <li class="pill">{s}</li>)}
+  </ul>
+  <div class="foot">
+    <p class="verified-by">{t.verificadoPor} <strong>{pick(caso.verifiedBy, lang)}</strong></p>
+    {
+      hasDonation && (
+        <span class="don-badge">
+          <Icon name="hand-coins" size={13} />
+          {t.badgeDonacion}
         </span>
-        <div style="font-weight:600">{mainNeed}</div>
-      </div>
-    )
-  }
-
-  {
-    topSkills.length > 0 && (
-      <ul class="pill-list">
-        {topSkills.map((skill) => <li>{skill}</li>)}
-      </ul>
-    )
-  }
-
-  <div class="card-footer">
-    <p class="muted" style="margin:0 0 0.7rem; font-size:0.82rem">
-      Verificado por <strong>{data.verifiedBy}</strong>
-    </p>
-    <a href={`/casos/${id}/`} class="btn btn-outline btn-block">Ver caso</a>
+      )
+    }
+    <span class="btn btn-ghost cta">{ctaLabel}<Icon name="arrow-right" size={16} /></span>
   </div>
-</article>
+</a>
+
+<style>
+  .caso-card {
+    gap: 13px;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--txm);
+    font-size: 13px;
+  }
+  h3 {
+    font-size: 18.5px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 2px 0 0;
+    line-height: 1.3;
+  }
+  .summary {
+    margin: 0;
+    color: var(--txs);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .main-need {
+    font-weight: 600;
+    color: var(--txt);
+    font-size: 15px;
+    margin-top: 3px;
+  }
+  .foot {
+    margin-top: auto;
+    padding-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .verified-by {
+    margin: 0;
+    color: var(--txm);
+    font-size: 13px;
+  }
+  .verified-by strong {
+    color: var(--txt);
+    font-weight: 600;
+  }
+  .don-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    align-self: flex-start;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    background: var(--yels);
+    color: var(--yelink);
+  }
+  .cta {
+    padding: 11px 18px;
+    font-size: 14.5px;
+  }
+</style>

@@ -1,51 +1,11 @@
 ---
-import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import JobCard from '../../components/JobCard.astro';
-
-const empleos = (await getCollection('empleos')).sort(
-  (a, b) => b.data.datePosted.valueOf() - a.data.datePosted.valueOf()
-);
+import EmpleosList from '../../components/views/EmpleosList.astro';
+import { useStrings } from '../../data/strings';
+const lang = 'es' as const;
+const t = useStrings(lang);
 ---
 
-<BaseLayout
-  title="Empleos remotos"
-  description="Empleos remotos reales, revisados y seguros para conectar talento afectado por emergencias con estabilidad económica."
->
-  <section class="page-intro">
-    <div class="container">
-      <p class="eyebrow">Empleos remotos</p>
-      <h1>Empleos reales, revisados y seguros</h1>
-      <p class="lead">
-        Oportunidades verificadas para reconstruir estabilidad. Cada oferta se revisa antes de
-        publicarse: buscamos puestos remotos reales y accesibles para convertir la ayuda puntual
-        en autonomía a largo plazo.
-      </p>
-    </div>
-  </section>
-
-  <section class="section" style="padding-top:0">
-    <div class="container">
-      <div class="notice notice-warn mb-2" style="margin-bottom:1.5rem">
-        <span aria-hidden="true">⚠️</span>
-        <div>
-          <strong>Antes de aplicar</strong>
-          Cada oportunidad se revisa antes de publicarse. Aun así, recomendamos verificar la
-          oferta antes de compartir información personal.
-        </div>
-      </div>
-
-      {
-        empleos.length > 0 ? (
-          <div class="grid grid-3">
-            {empleos.map((empleo) => (
-              <JobCard empleo={empleo} />
-            ))}
-          </div>
-        ) : (
-          <div class="empty-state">Aún no hay oportunidades publicadas. Vuelve pronto.</div>
-        )
-      }
-    </div>
-  </section>
+<BaseLayout title={t.empleosPH1} description={t.empleosPLead} lang={lang}>
+  <EmpleosList lang={lang} />
 </BaseLayout>

@@ -1,0 +1,503 @@
+---
+import type { Caso, Lang, DonationMethod } from '../../data/types';
+import { pick } from '../../data/types';
+import { useStrings } from '../../data/strings';
+import { paths } from '../../data/site';
+import { href } from '../../i18n/utils';
+import Badge from '../Badge.astro';
+import Icon from '../Icon.astro';
+import BodyBlocks from '../BodyBlocks.astro';
+
+interface Props {
+  caso: Caso;
+  lang: Lang;
+}
+const { caso, lang } = Astro.props;
+const t = useStrings(lang);
+
+const statusMeta = {
+  verified: { variant: 'verified' as const, label: t.stVerificado },
+  urgent: { variant: 'urgent' as const, label: t.stUrgente },
+  pending: { variant: 'pending' as const, label: t.stPendiente },
+}[caso.status];
+
+const donIcon: Record<DonationMethod['type'], string> = {
+  zelle: 'send',
+  paypal: 'wallet',
+  bank_of_america: 'landmark',
+  pago_movil: 'smartphone',
+};
+
+const methods = (caso.donationMethods ?? []).map((m, i) => {
+  const display =
+    m.type === 'pago_movil' ? [m.bank, m.phone, m.idNumber].filter(Boolean).join(' · ') : m.value ?? '';
+  const copyText = m.value || m.phone || display;
+  return {
+    key: `${caso.id}-${i}`,
+    icon: donIcon[m.type] ?? 'hand-coins',
+    label: m.label,
+    holder: m.holder,
+    display,
+    copyText,
+    note: pick(m.note, lang),
+  };
+});
+
+const showMethods = caso.status !== 'pending' && methods.length > 0;
+const showPending = caso.status === 'pending';
+const showEmpty = caso.status !== 'pending' && methods.length === 0;
+
+const needs = pick(caso.needs, lang);
+const skills = pick(caso.skills, lang);
+const hasSupport = !!caso.supportLink && caso.supportLink !== '#';
+
+const meta = [
+  { icon: 'shield-check', cls: 'acc', k: t.cdEstado, v: statusMeta.label },
+  { icon: 'map-pin', cls: 'yel', k: t.cdUbicacion, v: pick(caso.location, lang) },
+  { icon: 'badge-check', cls: 'grn', k: t.verificadoPor, v: pick(caso.verifiedBy, lang) },
+  { icon: 'calendar-days', cls: 'neutral', k: t.cdActualizacion, v: pick(caso.dateLabel, lang) },
+];
+---
+
+<section class="section detail">
+  <div class="container">
+    <a class="back" href={href(paths.casos, lang)}><Icon name="arrow-left" size={16} />{t.volverCasos}</a>
+
+    <div class="head-badges">
+      <Badge variant={statusMeta.variant} label={statusMeta.label} dot />
+      <span class="badge"><Icon name="map-pin" size={13} />{pick(caso.location, lang)}</span>
+    </div>
+    <h1 class="detail-h1">{pick(caso.title, lang)}</h1>
+    <p class="detail-summary">{pick(caso.summary, lang)}</p>
+
+    <div class="card meta-grid">
+      {
+        meta.map((m) => (
+          <div class="meta-item">
+            <span class:list={['meta-ico', m.cls]}>
+              <Icon name={m.icon} size={20} />
+            </span>
+            <div>
+              <span class="kicker">{m.k}</span>
+              <span class="meta-v">{m.v}</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="cols">
+      <div class="main">
+        <h2 class="sec-h2">{t.cdResumen}</h2>
+        <BodyBlocks blocks={pick(caso.body, lang)} />
+
+        <h2 class="sec-h2">{t.cdNecesidades}</h2>
+        <ul class="need-list">
+          {needs.map((n) => <li><Icon name="circle-dot" size={14} class="need-ico" />{n}</li>)}
+        </ul>
+
+        <h2 class="sec-h2">{t.cdHabilidades}</h2>
+        <ul class="skill-list">
+          {skills.map((s) => <li>{s}</li>)}
+        </ul>
+
+        <h2 class="sec-h2">{t.cdDisp}</h2>
+        <p class="plain">{pick(caso.remoteWorkAvailability, lang)}</p>
+
+        <h2 class="sec-h2 mt">{t.formasT}</h2>
+        {
+          showMethods && (
+            <>
+              <p class="forms-sub">{t.formasSub}</p>
+              <div class="methods">
+                {methods.map((m) => (
+                  <div class="method">
+                    <div class="m-head">
+                      <span class="m-id">
+                        <span class="m-ico"><Icon name={m.icon} size={19} /></span>
+                        <span class="m-label">{m.label}</span>
+                      </span>
+                      <span class="m-verif"><Icon name="shield-check" size={12} />{pick(caso.verifiedBy, lang)}</span>
+                    </div>
+                    <div>
+                      <span class="kicker">{t.dmHolder}</span>
+                      <span class="m-holder">{m.holder}</span>
+                    </div>
+                    <div class="m-value">{m.display}</div>
+                    <span class="m-note">{m.note}</span>
+                    <button type="button" class="btn btn-blue m-copy" data-copy={m.copyText} data-copied={t.copiedMsg}>
+                      <Icon name="copy" size={15} /><span class="copy-label">{t.copyBtn}</span>
+                    </button>
+                  </div>
+                ))}
+              </div>
+              <div class="notice warn methods-disc">
+                <Icon name="shield-alert" size={21} class="ico" />
+                <p>{t.formasDisc}</p>
+              </div>
+            </>
+          )
+        }
+        {showPending && <p class="don-msg"><Icon name="clock" size={19} class="msg-ico" />{t.formasPending}</p>}
+        {showEmpty && <p class="don-msg">{t.formasEmpty}</p>}
+
+        <div class="notice cd-note">
+          <Icon name="lock" size={21} class="ico" />
+          <p><strong>{t.cdNotaT}</strong>{t.cdNotaX}</p>
+        </div>
+      </div>
+
+      <aside class="aside">
+        <div class="card">
+          <h3>{t.cdComoApoyar}</h3>
+          <div class="contact">
+            <span class="kicker">{t.cdContactoSeguro}</span>
+            <span class="contact-v">{pick(caso.contactMethod, lang)}</span>
+          </div>
+          {
+            hasSupport ? (
+              <a class="btn btn-blue btn-full" href={caso.supportLink!} target="_blank" rel="noopener noreferrer">
+                {t.cdApoyar}
+                <Icon name="arrow-up-right" size={16} />
+              </a>
+            ) : (
+              <p class="no-support">{t.cdNoSupport}</p>
+            )
+          }
+          <a class="btn btn-ghost btn-full recruiter" href={href(paths.empleos, lang)}>
+            <Icon name="briefcase" size={16} />{t.cdRecruiter}
+          </a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .detail {
+    padding-top: clamp(26px, 4vw, 40px);
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--acc);
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .back:hover {
+    gap: 9px;
+  }
+  .head-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .detail-h1 {
+    font-size: clamp(28px, 3.6vw, 42px);
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--acc);
+    margin: 0 0 14px;
+    max-width: 24ch;
+  }
+  .detail-summary {
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.6;
+    color: var(--txs);
+    max-width: 64ch;
+    margin: 0;
+  }
+
+  .meta-grid {
+    margin: 28px 0 36px;
+    display: grid;
+    gap: 22px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  }
+  .meta-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .meta-ico {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+  }
+  .meta-ico.acc { background: var(--accs); color: var(--acc); }
+  .meta-ico.yel { background: var(--yels); color: var(--yelink); }
+  .meta-ico.grn { background: var(--grns); color: var(--grn); }
+  .meta-ico.neutral { background: var(--srf2); color: var(--txs); }
+  .meta-v {
+    display: block;
+    font-weight: 700;
+    color: var(--txt);
+    font-size: 15px;
+    margin-top: 2px;
+  }
+  .kicker {
+    display: block;
+  }
+
+  .cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
+    align-items: flex-start;
+  }
+  .main {
+    flex: 1 1 430px;
+    min-width: 0;
+  }
+  .sec-h2 {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 0 0 12px;
+  }
+  .sec-h2:not(:first-child) {
+    margin-top: 28px;
+  }
+  .sec-h2.mt {
+    margin-top: 30px;
+    margin-bottom: 6px;
+  }
+  .plain {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--txs);
+    margin: 0;
+  }
+
+  .need-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    padding: 0;
+    margin: 0;
+  }
+  .need-list li {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--srf);
+    border: 1px solid var(--bd);
+    border-radius: 12px;
+    padding: 9px 14px;
+    font-size: 14px;
+    color: var(--txt);
+    font-weight: 500;
+  }
+  .need-list :global(.need-ico) {
+    color: var(--acc);
+  }
+  .skill-list {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    padding: 0;
+    margin: 0;
+  }
+  .skill-list li {
+    display: inline-flex;
+    background: var(--accs);
+    border: 1px solid var(--accbd);
+    border-radius: 999px;
+    padding: 7px 14px;
+    font-size: 13.5px;
+    color: var(--acc);
+    font-weight: 600;
+  }
+
+  .forms-sub {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--txs);
+    margin: 0 0 16px;
+  }
+  .methods {
+    display: grid;
+    gap: 14px;
+    grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+  }
+  .method {
+    background: var(--srf);
+    border: 1px solid var(--bd);
+    border-radius: 16px;
+    padding: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+    box-shadow: 0 8px 24px var(--sh);
+  }
+  .m-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .m-id {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+  }
+  .m-ico {
+    display: inline-flex;
+    width: 38px;
+    height: 38px;
+    border-radius: 11px;
+    background: var(--accs);
+    color: var(--acc);
+    align-items: center;
+    justify-content: center;
+  }
+  .m-label {
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--txt);
+  }
+  .m-verif {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--accs);
+    color: var(--acc);
+    white-space: nowrap;
+  }
+  .m-holder {
+    display: block;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--txt);
+  }
+  .m-value {
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 13px;
+    color: var(--txt);
+    background: var(--soft);
+    border: 1px solid var(--bd);
+    border-radius: 10px;
+    padding: 9px 11px;
+    word-break: break-word;
+    line-height: 1.5;
+  }
+  .m-note {
+    font-size: 12.5px;
+    color: var(--txm);
+    line-height: 1.4;
+  }
+  .m-copy {
+    padding: 10px 16px;
+    font-size: 13.5px;
+  }
+  .methods-disc {
+    margin-top: 18px;
+  }
+  .methods-disc p {
+    margin: 0;
+  }
+
+  .don-msg {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--txm);
+    background: var(--soft);
+    border: 1px solid var(--bd);
+    border-radius: 14px;
+    padding: 16px 18px;
+    margin: 6px 0 0;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .don-msg :global(.msg-ico) {
+    color: var(--txm);
+    flex: 0 0 auto;
+    margin-top: 1px;
+  }
+  .cd-note {
+    margin-top: 26px;
+  }
+
+  .aside {
+    flex: 1 1 290px;
+    max-width: 360px;
+    position: sticky;
+    top: 90px;
+  }
+  .aside h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 0 0 16px;
+  }
+  .contact {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--bd);
+  }
+  .contact-v {
+    font-size: 14px;
+    color: var(--txt);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .no-support {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--txm);
+    background: var(--soft);
+    border: 1px solid var(--bd);
+    border-radius: 12px;
+    padding: 13px 15px;
+  }
+  .recruiter {
+    margin-top: 11px;
+    font-size: 14.5px;
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.m-copy').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const text = btn.dataset.copy || '';
+      const copied = btn.dataset.copied || 'Copied!';
+      const label = btn.querySelector('.copy-label');
+      const original = label?.textContent || '';
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      if (label) label.textContent = copied;
+      setTimeout(() => {
+        if (label) label.textContent = original;
+      }, 1600);
+    });
+  });
+</script>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Home from '../../components/views/Home.astro';
+import { useStrings } from '../../data/strings';
+const lang = 'en' as const;
+const t = useStrings(lang);
+---
+
+<BaseLayout title="" description={t.heroSub} lang={lang}>
+  <Home lang={lang} />
+</BaseLayout>
