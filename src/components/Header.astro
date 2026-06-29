@@ -1,0 +1,44 @@
+---
+const links = [
+  { href: '/casos', label: 'Casos' },
+  { href: '/empleos', label: 'Empleos remotos' },
+  { href: '/organizaciones', label: 'Organizaciones' },
+  { href: '/como-funciona', label: 'Cómo funciona' },
+];
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => path === href || path.startsWith(href + '/');
+---
+
+<header class="site-header">
+  <div class="container">
+    <a href="/" class="brand" aria-label="Donde Ayudar — inicio">
+      <img src="/logo.png" alt="Donde Ayudar" width="160" height="44" />
+      <span class="brand-text">Donde Ayudar</span>
+    </a>
+
+    <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" data-nav-toggle>
+      ☰
+    </button>
+
+    <nav class="nav" data-nav aria-label="Navegación principal">
+      {
+        links.map((link) => (
+          <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
+      <a href="/publicar-oportunidad" class="btn btn-primary">Publicar oportunidad</a>
+    </nav>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('[data-nav-toggle]');
+  const nav = document.querySelector('[data-nav]');
+  toggle?.addEventListener('click', () => {
+    const open = nav?.classList.toggle('open');
+    toggle.setAttribute('aria-expanded', String(Boolean(open)));
+  });
+</script>

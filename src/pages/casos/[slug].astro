@@ -1,0 +1,139 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/Badge.astro';
+
+export async function getStaticPaths() {
+  const casos = await getCollection('casos');
+  return casos.map((caso) => ({
+    params: { slug: caso.id },
+    props: { caso },
+  }));
+}
+
+const { caso } = Astro.props;
+const { data } = caso;
+const { Content } = await render(caso);
+
+const dateLabel = data.dateUpdated.toLocaleDateString('es-VE', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const isUrl = (s?: string) => !!s && /^https?:\/\//.test(s);
+---
+
+<BaseLayout title={data.title} description={data.summary}>
+  <section class="section">
+    <div class="container">
+      <a href="/casos" class="back-link">← Volver a casos</a>
+
+      <div class="detail-header">
+        <div class="tag-row mb-2">
+          <Badge variant={data.status} dot />
+          <span class="badge badge-neutral">📍 {data.location}</span>
+        </div>
+        <h1>{data.title}</h1>
+        <p class="lead">{data.summary}</p>
+      </div>
+
+      <div class="detail-grid">
+        <!-- Columna principal -->
+        <div class="detail-body">
+          <h2>Necesidades</h2>
+          <ul class="pill-list">
+            {data.needs.map((need) => <li>{need}</li>)}
+          </ul>
+
+          {
+            data.skills.length > 0 && (
+              <>
+                <h2>Habilidades laborales</h2>
+                <ul class="pill-list">
+                  {data.skills.map((skill) => (
+                    <li>{skill}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+
+          <h2>Disponibilidad remota</h2>
+          <p>{data.remoteWorkAvailability}</p>
+
+          <h2>Sobre este caso</h2>
+          <div class="content"><Content /></div>
+
+          <div class="notice mt-3">
+            <span aria-hidden="true">🔒</span>
+            <div>
+              <strong>Nota de seguridad</strong>
+              Esta plataforma no almacena documentos personales ni procesa pagos. La
+              verificación ocurre a través de organizaciones o voluntarios aliados.
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna lateral -->
+        <aside>
+          <div class="detail-card">
+            <h3>Apoyo y contacto</h3>
+            <ul class="detail-list mb-2">
+              <li>
+                <span class="k">Estado</span>
+                <span class="v">
+                  {data.status === 'verified' && 'Verificado'}
+                  {data.status === 'urgent' && 'Urgente'}
+                  {data.status === 'pending' && 'En verificación'}
+                </span>
+              </li>
+              <li>
+                <span class="k">Verificado por</span>
+                <span class="v">{data.verifiedBy}</span>
+              </li>
+              <li>
+                <span class="k">Método de contacto seguro</span>
+                <span class="v">{data.contactMethod}</span>
+              </li>
+              <li>
+                <span class="k">Última actualización</span>
+                <span class="v">{dateLabel}</span>
+              </li>
+            </ul>
+
+            {
+              data.supportLink ? (
+                <>
+                  <a
+                    href={data.supportLink}
+                    class="btn btn-primary btn-block"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Apoyar este caso ↗
+                  </a>
+                  <p class="muted" style="font-size:0.82rem; margin:0.6rem 0 0">
+                    ⚠️ Donde Ayudar nunca recibe ni procesa dinero. Verifica al destinatario
+                    con <strong>{data.verifiedBy}</strong> antes de enviar cualquier apoyo. Si
+                    un enlace te pide contraseñas, datos bancarios o documentos personales,
+                    no es un canal oficial.
+                  </p>
+                </>
+              ) : (
+                <p class="muted" style="font-size:0.88rem; margin:0">
+                  El canal de apoyo se habilita una vez completada la verificación con la
+                  organización aliada.
+                </p>
+              )
+            }
+
+            <a href="/empleos" class="btn btn-outline btn-block mt-2">
+              ¿Eres recruiter? Ver perfiles
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,118 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CTASection from '../components/CTASection.astro';
+
+const steps = [
+  {
+    n: '01',
+    title: 'La plataforma centraliza información segura',
+    text: 'Reunimos en un solo lugar casos, oportunidades de empleo remoto y organizaciones aliadas. Toda la información es pública y segura: nunca cédulas, pasaportes ni documentos privados.',
+  },
+  {
+    n: '02',
+    title: 'Los casos vienen de organizaciones o verificadores',
+    text: 'No publicamos casos por nuestra cuenta. Cada familia o persona es identificada y verificada por una fundación, refugio o red de voluntarios aliada.',
+  },
+  {
+    n: '03',
+    title: 'No se almacenan documentos sensibles',
+    text: 'No hay base de datos de información personal ni login. El contacto y la verificación ocurren por canales de las organizaciones, no en esta web.',
+  },
+  {
+    n: '04',
+    title: 'No se procesan pagos',
+    text: 'La plataforma no recibe ni gestiona dinero. Las donaciones y el apoyo fluyen directamente por los canales verificados de cada organización.',
+  },
+  {
+    n: '05',
+    title: 'Las oportunidades remotas son curadas',
+    text: 'Nada de scraping de LinkedIn, Indeed u otras plataformas. Cada oferta de empleo remoto se revisa manualmente antes de publicarse.',
+  },
+  {
+    n: '06',
+    title: 'Conectamos ayuda inmediata con estabilidad',
+    text: 'El objetivo final: que la ayuda puntual resuelva el presente y que un empleo remoto reconstruya la estabilidad económica a largo plazo.',
+  },
+];
+---
+
+<BaseLayout
+  title="Cómo funciona"
+  description="El modelo de Donde Ayudar: centralizar información segura, verificar a través de aliados y conectar ayuda inmediata con estabilidad a largo plazo."
+>
+  <section class="page-intro">
+    <div class="container">
+      <p class="eyebrow">El modelo</p>
+      <h1>Cómo funciona</h1>
+      <p class="lead">
+        Somos una capa pública de conexión, no una app de donaciones ni un intermediario
+        financiero. Estos son los principios que guían cada decisión del proyecto.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="grid grid-2">
+        {
+          steps.map((step) => (
+            <div class="card">
+              <div class="num" style="font-size:1.6rem; font-weight:700; color:var(--color-yellow-dark)">
+                {step.n}
+              </div>
+              <h3 style="margin:0">{step.title}</h3>
+              <p class="muted" style="margin:0">{step.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Qué SÍ / qué NO -->
+  <section class="section section-soft">
+    <div class="container">
+      <p class="eyebrow">Límites claros</p>
+      <h2>Qué hacemos y qué no</h2>
+      <div class="grid grid-2 mt-3">
+        <div class="card">
+          <h3>✅ Qué SÍ hacemos</h3>
+          <ul style="margin:0; padding-left:1.1rem; display:grid; gap:0.5rem; color:var(--color-text-soft)">
+            <li>Publicar casos verificados con información pública.</li>
+            <li>Curar manualmente oportunidades de empleo remoto.</li>
+            <li>Conectar familias con organizaciones, donantes y recruiters.</li>
+            <li>Mantener todo estático, seguro y simple.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>🚫 Qué NO hacemos</h3>
+          <ul style="margin:0; padding-left:1.1rem; display:grid; gap:0.5rem; color:var(--color-text-soft)">
+            <li>Procesar pagos o donaciones en la plataforma.</li>
+            <li>Guardar cédulas, pasaportes o documentos privados.</li>
+            <li>Pedir login ni crear cuentas.</li>
+            <li>Hacer scraping de LinkedIn, Indeed u otras plataformas.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="notice mt-3">
+        <span aria-hidden="true">🔒</span>
+        <div>
+          <strong>Compromiso de seguridad y dignidad</strong>
+          Esta plataforma no almacena documentos personales ni procesa pagos. La verificación
+          ocurre a través de organizaciones o voluntarios aliados. Cada caso se trata con
+          respeto: no buscamos caridad, sino conexión, estabilidad y dignidad.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <CTASection
+    eyebrow="Participa"
+    title="Ayuda a convertir el presente en estabilidad"
+    text="Publica una oportunidad remota, conecta tu organización o comparte un caso verificado. Cada conexión cuenta."
+    primaryLabel="Publicar una oportunidad"
+    secondaryLabel="Ver casos"
+    secondaryHref="/casos"
+  />
+</BaseLayout>

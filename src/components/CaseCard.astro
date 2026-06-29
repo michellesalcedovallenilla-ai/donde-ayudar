@@ -1,0 +1,52 @@
+---
+import Badge from './Badge.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  caso: CollectionEntry<'casos'>;
+}
+
+const { caso } = Astro.props;
+const { data, id } = caso;
+
+const statusVariant = data.status; // 'verified' | 'pending' | 'urgent'
+const mainNeed = data.needs[0];
+const topSkills = data.skills.slice(0, 3);
+---
+
+<article class="card">
+  <div class="tag-row" style="justify-content:space-between; align-items:center">
+    <Badge variant={statusVariant} dot />
+    <span class="muted" style="font-size:0.85rem">📍 {data.location}</span>
+  </div>
+
+  <h3><a href={`/casos/${id}/`}>{data.title}</a></h3>
+
+  <p class="muted" style="margin:0; font-size:0.95rem">{data.summary}</p>
+
+  {
+    mainNeed && (
+      <div>
+        <span class="muted" style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em">
+          Necesidad principal
+        </span>
+        <div style="font-weight:600">{mainNeed}</div>
+      </div>
+    )
+  }
+
+  {
+    topSkills.length > 0 && (
+      <ul class="pill-list">
+        {topSkills.map((skill) => <li>{skill}</li>)}
+      </ul>
+    )
+  }
+
+  <div class="card-footer">
+    <p class="muted" style="margin:0 0 0.7rem; font-size:0.82rem">
+      Verificado por <strong>{data.verifiedBy}</strong>
+    </p>
+    <a href={`/casos/${id}/`} class="btn btn-outline btn-block">Ver caso</a>
+  </div>
+</article>

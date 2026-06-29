@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Privacidad y seguridad"
+  description="Cómo Donde Ayudar protege los datos de las personas: sin cuentas, sin rastreo, sin almacenamiento de documentos ni procesamiento de pagos."
+>
+  <section class="page-intro">
+    <div class="container">
+      <p class="eyebrow">Confianza</p>
+      <h1>Privacidad y seguridad</h1>
+      <p class="lead">
+        Donde Ayudar está diseñada para proteger la dignidad de personas en situación
+        vulnerable. Esto es lo que hacemos —y lo que nunca hacemos— con la información.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="detail-body" style="max-width:760px">
+        <h2>Lo que nunca hacemos</h2>
+        <ul class="pill-list">
+          <li>No tenemos cuentas, login ni contraseñas.</li>
+          <li>No usamos rastreadores, cookies de terceros ni analítica.</li>
+          <li>No almacenamos cédulas, pasaportes ni documentos personales.</li>
+          <li>No recibimos, procesamos ni custodiamos dinero.</li>
+          <li>No publicamos direcciones exactas ni teléfonos personales de las personas afectadas.</li>
+        </ul>
+
+        <h2>Cómo manejamos la información de los casos</h2>
+        <p>
+          Cada caso se publica con <strong>información mínima y pública</strong>: un nombre de
+          pila, una ubicación general (municipio), habilidades y necesidades. Cada caso es
+          verificado por una organización aliada, y todo contacto se canaliza a través de esa
+          organización —nunca a través de datos privados de la persona afectada.
+        </p>
+        <p>
+          Solo publicamos un caso real con el <strong>consentimiento documentado</strong> de la
+          persona o familia. Cualquiera puede pedir la corrección o eliminación de un caso
+          escribiéndonos; lo retiramos lo antes posible.
+        </p>
+
+        <h2>Donaciones y apoyo seguro</h2>
+        <div class="notice mt-2">
+          <span aria-hidden="true">⚠️</span>
+          <div>
+            <strong>Donde Ayudar nunca recibe ni procesa dinero.</strong>
+            Cualquier apoyo fluye por los canales propios de la organización verificadora.
+            Antes de donar, confirma al destinatario con esa organización. Si un enlace te
+            pide contraseñas, datos bancarios o documentos personales, no es un canal oficial.
+          </div>
+        </div>
+
+        <h2>Seguridad técnica</h2>
+        <p>
+          El sitio es 100% estático: no hay servidor, base de datos ni formularios que envíen
+          datos a nuestros sistemas. Los formularios solo abren tu propio cliente de correo.
+          Servimos todo por HTTPS con cabeceras de seguridad (CSP, HSTS y protección contra
+          incrustación en iframes).
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

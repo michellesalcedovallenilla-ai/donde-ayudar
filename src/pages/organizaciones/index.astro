@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import OrganizationCard from '../../components/OrganizationCard.astro';
+
+const organizaciones = (await getCollection('organizaciones')).sort((a, b) => {
+  // Verificadas primero, luego alfabético
+  if (a.data.verified !== b.data.verified) return a.data.verified ? -1 : 1;
+  return a.data.title.localeCompare(b.data.title, 'es');
+});
+---
+
+<BaseLayout
+  title="Organizaciones aliadas"
+  description="Fundaciones, centros de acopio, refugios y redes de voluntarios que verifican casos y canalizan la ayuda en La Guaira."
+>
+  <section class="page-intro">
+    <div class="container">
+      <p class="eyebrow">Organizaciones</p>
+      <h1>La red que hace posible el puente</h1>
+      <p class="lead">
+        Fundaciones, centros de acopio, refugios y redes de voluntarios. Son ellas quienes
+        verifican casos y garantizan que la ayuda llegue por canales de confianza.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      {
+        organizaciones.length > 0 ? (
+          <div class="grid grid-3">
+            {organizaciones.map((organizacion) => (
+              <OrganizationCard organizacion={organizacion} />
+            ))}
+          </div>
+        ) : (
+          <div class="empty-state">Aún no hay organizaciones registradas.</div>
+        )
+      }
+
+      <div class="notice mt-3">
+        <span aria-hidden="true">🤝</span>
+        <div>
+          <strong>¿Tu organización quiere sumarse?</strong>
+          Si eres una fundación, refugio o red de voluntarios y deseas verificar casos o
+          canalizar ayuda, <a href="/publicar-oportunidad#organizacion">escríbenos aquí</a>.
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

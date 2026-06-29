@@ -1,0 +1,26 @@
+---
+interface Props {
+  /** Variante visual del badge */
+  variant?: 'verified' | 'pending' | 'urgent' | 'remote' | 'ally' | 'neutral';
+  /** Mostrar punto indicador a la izquierda */
+  dot?: boolean;
+  /** Texto a mostrar; si se omite, se usa el slot */
+  label?: string;
+}
+
+const { variant = 'neutral', dot = false, label } = Astro.props;
+
+const labels: Record<string, string> = {
+  verified: 'Verificado',
+  pending: 'En verificación',
+  urgent: 'Urgente',
+  remote: 'Remoto',
+  ally: 'Organización aliada',
+};
+
+const text = label ?? labels[variant];
+---
+
+<span class:list={['badge', `badge-${variant}`, { 'badge-dot': dot }]}>
+  {text ? text : <slot />}
+</span>

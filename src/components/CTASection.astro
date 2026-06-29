@@ -1,0 +1,35 @@
+---
+interface Props {
+  eyebrow?: string;
+  title?: string;
+  text?: string;
+  primaryHref?: string;
+  primaryLabel?: string;
+  secondaryHref?: string;
+  secondaryLabel?: string;
+}
+
+const {
+  eyebrow = 'Súmate',
+  title = '¿Tu empresa contrata talento remoto?',
+  text = 'Publica una oportunidad remota y ayuda a una familia afectada a recuperar estabilidad económica. La curación es manual y respeta la dignidad de cada persona.',
+  primaryHref = '/publicar-oportunidad',
+  primaryLabel = 'Publicar una oportunidad',
+  secondaryHref = '/como-funciona',
+  secondaryLabel = 'Cómo funciona',
+} = Astro.props;
+---
+
+<section class="section">
+  <div class="container">
+    <div class="cta">
+      {eyebrow && <p class="eyebrow" style="color:rgba(255,255,255,0.8)">{eyebrow}</p>}
+      <h2>{title}</h2>
+      <p>{text}</p>
+      <div class="hero-actions">
+        <a href={primaryHref} class="btn btn-primary">{primaryLabel}</a>
+        {secondaryHref && <a href={secondaryHref} class="btn btn-outline">{secondaryLabel}</a>}
+      </div>
+    </div>
+  </div>
+</section>

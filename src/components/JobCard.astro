@@ -1,0 +1,47 @@
+---
+import Badge from './Badge.astro';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  empleo: CollectionEntry<'empleos'>;
+}
+
+const { empleo } = Astro.props;
+const { data, id } = empleo;
+
+const dateLabel = data.datePosted.toLocaleDateString('es-VE', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+---
+
+<article class="card">
+  <div class="tag-row" style="justify-content:space-between; align-items:flex-start">
+    <Badge variant="remote">{data.remoteType}</Badge>
+    <span class="muted" style="font-size:0.82rem">{dateLabel}</span>
+  </div>
+
+  <h3><a href={`/empleos/${id}/`}>{data.title}</a></h3>
+
+  <div class="card-meta">
+    <span>🏢 {data.company}</span>
+    <span>🗂️ {data.category}</span>
+  </div>
+
+  <p class="muted" style="margin:0; font-size:0.95rem">
+    {data.description.slice(0, 130)}{data.description.length > 130 ? '…' : ''}
+  </p>
+
+  {
+    data.tags.length > 0 && (
+      <ul class="pill-list">
+        {data.tags.slice(0, 4).map((tag) => <li>{tag}</li>)}
+      </ul>
+    )
+  }
+
+  <div class="card-footer">
+    <a href={`/empleos/${id}/`} class="btn btn-secondary btn-block">Ver y aplicar</a>
+  </div>
+</article>

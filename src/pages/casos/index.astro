@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CaseCard from '../../components/CaseCard.astro';
+
+const casos = (await getCollection('casos')).sort((a, b) => {
+  // Urgentes primero, luego por fecha de actualización
+  const order = { urgent: 0, verified: 1, pending: 2 } as const;
+  const diff = order[a.data.status] - order[b.data.status];
+  if (diff !== 0) return diff;
+  return b.data.dateUpdated.valueOf() - a.data.dateUpdated.valueOf();
+});
+---
+
+<BaseLayout
+  title="Casos verificados"
+  description="Familias y personas afectadas en La Guaira. Información pública y segura, verificada por organizaciones aliadas."
+>
+  <section class="page-intro">
+    <div class="container">
+      <p class="eyebrow">Casos</p>
+      <h1>Familias y personas afectadas</h1>
+      <p class="lead">
+        Cada caso es verificado por una organización o voluntario aliado. Mostramos solo
+        información pública y segura. El contacto siempre ocurre por canales verificados.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <div class="notice mb-2" style="margin-bottom:1.5rem">
+        <span aria-hidden="true">🔒</span>
+        <div>
+          <strong>Seguridad primero</strong>
+          Esta plataforma no almacena documentos personales ni procesa pagos. La verificación
+          ocurre a través de organizaciones o voluntarios aliados.
+        </div>
+      </div>
+
+      {
+        casos.length > 0 ? (
+          <div class="grid grid-3">
+            {casos.map((caso) => (
+              <CaseCard caso={caso} />
+            ))}
+          </div>
+        ) : (
+          <div class="empty-state">Aún no hay casos publicados. Vuelve pronto.</div>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>

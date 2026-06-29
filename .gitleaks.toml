@@ -1,0 +1,39 @@
+title = "Donde Ayudar — secret & PII scanning"
+
+# Start from Gitleaks' built-in rule set (API keys, tokens, private keys, etc.)
+[extend]
+useDefault = true
+
+# This is a no-secrets, no-backend static site. The biggest real risk is
+# accidentally committing personal data of vulnerable people. These custom
+# rules flag likely PII so it never enters git history.
+
+[[rules]]
+id = "venezuelan-id"
+description = "Possible cédula / pasaporte (PII — must never be committed)"
+regex = '''(?i)\b[VEJGP]-?\d{6,9}\b'''
+keywords = ["cedula", "cédula", "pasaporte", "ci:"]
+tags = ["pii"]
+
+[[rules]]
+id = "phone-ve"
+description = "Possible personal phone number of an affected person"
+regex = '''(?i)(\+?58[\s-]?)?0?4(12|14|16|24|26)[\s-]?\d{3}[\s-]?\d{4}'''
+keywords = ["telefono", "teléfono", "whatsapp", "wa.me"]
+tags = ["pii"]
+
+[allowlist]
+description = "Paths and patterns that are safe by design"
+paths = [
+  '''node_modules/''',
+  '''dist/''',
+  '''\.astro/''',
+  '''package-lock\.json''',
+  '''Mejora UXUI Donde Ayudar-handoff/''',
+]
+regexes = [
+  '''(?i)example''',
+  '''(?i)placeholder''',
+  '''tu-dominio''',
+  '''tu@empresa''',
+]

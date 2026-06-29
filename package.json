@@ -1,0 +1,16 @@
+{
+  "name": "donde-ayudar",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Donde Ayudar — plataforma puente que conecta familias verificadas con organizaciones, donantes y oportunidades de empleo remoto.",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.2.5"
+  }
+}

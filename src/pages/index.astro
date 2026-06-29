@@ -1,0 +1,221 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import CaseCard from '../components/CaseCard.astro';
+import JobCard from '../components/JobCard.astro';
+import CTASection from '../components/CTASection.astro';
+
+const casos = (await getCollection('casos')).sort(
+  (a, b) => b.data.dateUpdated.valueOf() - a.data.dateUpdated.valueOf()
+);
+const empleos = (await getCollection('empleos')).sort(
+  (a, b) => b.data.datePosted.valueOf() - a.data.datePosted.valueOf()
+);
+const organizaciones = await getCollection('organizaciones');
+
+const casosVerificados = casos.filter((c) => c.data.status !== 'pending');
+const featuredCasos = casos.slice(0, 3);
+const featuredEmpleos = empleos.slice(0, 3);
+---
+
+<BaseLayout
+  title="Donde Ayudar"
+  description="Donde Ayudar conecta familias verificadas con organizaciones, donantes y empleo remoto. La ayuda inmediata resuelve el presente, pero el empleo remoto puede reconstruir estabilidad."
+>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-grid">
+        <!-- Columna copy -->
+        <div class="hero-copy">
+          <p class="eyebrow">Casos verificados · Oportunidades reales</p>
+          <h1>Ayuda verificada. Oportunidades reales.</h1>
+          <p class="lead">
+            Donde Ayudar conecta casos afectados por emergencias con organizaciones aliadas,
+            apoyo seguro y oportunidades de empleo para reconstruir estabilidad.
+          </p>
+          <div class="hero-actions">
+            <a href="/casos" class="btn btn-primary">Ver casos verificados</a>
+            <a href="/empleos" class="btn btn-secondary">Ver empleos</a>
+            <a href="/como-funciona" class="btn btn-outline">Cómo funciona</a>
+          </div>
+          <ul class="trust-row">
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+              Verificado por aliados
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              Sin datos sensibles
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
+              Sin pagos en plataforma
+            </li>
+          </ul>
+        </div>
+
+        <!-- Columna visual: mockup de plataforma (HTML/CSS, sin fotos) -->
+        <div class="hero-visual">
+          <div class="mockup" role="img" aria-label="Vista de la plataforma Donde Ayudar conectando un caso verificado, una organización aliada y un empleo disponible.">
+            <div class="mockup-bar">
+              <img src="/logo.png" alt="" width="80" height="24" />
+              <span class="mockup-title">Red de ayuda</span>
+              <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+            <div class="mockup-body">
+              <!-- Flujo ayuda → organización → empleo -->
+              <div class="flow" aria-hidden="true">
+                <span class="flow-node">
+                  <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 1 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/></svg></span>
+                  Ayuda
+                </span>
+                <span class="flow-line"></span>
+                <span class="flow-node">
+                  <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l7-4 7 4v14"/><path d="M9 9h.01M9 13h.01M9 17h.01"/></svg></span>
+                  Organización
+                </span>
+                <span class="flow-line"></span>
+                <span class="flow-node">
+                  <span class="dot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>
+                  Empleo
+                </span>
+              </div>
+
+              <!-- Caso verificado -->
+              <div class="mini-card">
+                <span class="mc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg></span>
+                <span class="mc-text">
+                  <span class="mc-title">Caso verificado</span>
+                  <span class="mc-sub">Familia · La Guaira</span>
+                </span>
+                <span class="badge badge-verified">Verificado</span>
+              </div>
+
+              <!-- Empleo disponible -->
+              <div class="mini-card is-job">
+                <span class="mc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg></span>
+                <span class="mc-text">
+                  <span class="mc-title">Empleo disponible</span>
+                  <span class="mc-sub">Soporte bilingüe · 100% remoto</span>
+                </span>
+                <span class="badge badge-remote">Remoto</span>
+              </div>
+
+              <!-- Organización aliada -->
+              <div class="mini-card is-ally">
+                <span class="mc-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+                <span class="mc-text">
+                  <span class="mc-title">Organización aliada</span>
+                  <span class="mc-sub">Fundación Manos del Litoral</span>
+                </span>
+                <span class="badge badge-ally">Aliada</span>
+              </div>
+
+              <!-- Chips de seguridad -->
+              <div class="mockup-chips">
+                <span class="chip">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m4.9 4.9 14.2 14.2"/></svg>
+                  Sin pagos en plataforma
+                </span>
+                <span class="chip">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                  Sin datos sensibles
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Métricas reales del contenido -->
+      <div class="stats">
+        <div class="stat">
+          <div class="num">{casosVerificados.length}</div>
+          <div class="label">Casos verificados</div>
+        </div>
+        <div class="stat">
+          <div class="num">{empleos.length}</div>
+          <div class="label">Empleos disponibles</div>
+        </div>
+        <div class="stat">
+          <div class="num">{organizaciones.length}</div>
+          <div class="label">Organizaciones aliadas</div>
+        </div>
+        <div class="stat">
+          <div class="num">0</div>
+          <div class="label">Datos sensibles almacenados</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA (resumen) -->
+  <section class="section section-soft">
+    <div class="container">
+      <p class="eyebrow">El modelo</p>
+      <h2>Un puente, no un intermediario</h2>
+      <p class="lead mb-2">
+        Centralizamos información pública y segura. La verificación la hacen organizaciones
+        y voluntarios aliados. Nosotros conectamos; la ayuda fluye por canales de confianza.
+      </p>
+      <div class="grid grid-3 mt-3">
+        <div class="card">
+          <h3>1 · Casos verificados</h3>
+          <p class="muted" style="margin:0">
+            Las organizaciones aliadas identifican y verifican familias. Solo se publica
+            información pública y segura: nunca cédulas ni documentos privados.
+          </p>
+        </div>
+        <div class="card">
+          <h3>2 · Conexión segura</h3>
+          <p class="muted" style="margin:0">
+            Donantes, recruiters y empresas encuentran casos y perfiles. El contacto ocurre
+            siempre a través de canales verificados por las organizaciones.
+          </p>
+        </div>
+        <div class="card">
+          <h3>3 · Estabilidad a largo plazo</h3>
+          <p class="muted" style="margin:0">
+            Revisamos cada oportunidad de empleo remoto antes de publicarla. Un ingreso estable
+            transforma la ayuda puntual en autonomía sostenible.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASOS DESTACADOS -->
+  <section class="section">
+    <div class="container">
+      <div class="tag-row" style="justify-content:space-between; align-items:baseline">
+        <div>
+          <p class="eyebrow">Personas reales</p>
+          <h2>Casos recientes</h2>
+        </div>
+        <a href="/casos" class="btn btn-outline">Ver todos →</a>
+      </div>
+      <div class="grid grid-3 mt-3">
+        {featuredCasos.map((caso) => <CaseCard caso={caso} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- EMPLEOS DESTACADOS -->
+  <section class="section section-soft">
+    <div class="container">
+      <div class="tag-row" style="justify-content:space-between; align-items:baseline">
+        <div>
+          <p class="eyebrow">Empleos verificados</p>
+          <h2>Oportunidades para reconstruir estabilidad</h2>
+        </div>
+        <a href="/empleos" class="btn btn-outline">Ver todos →</a>
+      </div>
+      <div class="grid grid-3 mt-3">
+        {featuredEmpleos.map((empleo) => <JobCard empleo={empleo} />)}
+      </div>
+    </div>
+  </section>
+
+  <CTASection />
+</BaseLayout>

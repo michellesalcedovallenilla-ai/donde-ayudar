@@ -1,0 +1,1351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style data-omelette-print-defaults>
+@media print {
+  @page { margin: 0.5in; }
+  h1, h2, h3, h4, h5, h6 { break-after: avoid; }
+  figure, table, pre, blockquote, img, svg, tr, [class~="card" i] { break-inside: avoid; }
+  img, svg { max-width: 100%; }
+  p { orphans: 3; widows: 3; }
+}
+</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<script src="content.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+  :root{
+    --bg:#F5F7FA;--srf:#ffffff;--srf2:#eef1f7;--soft:#f1f4fa;
+    --txt:#1F2937;--txs:#4b5563;--txm:#6b7280;
+    --bd:#e6ebf3;--bd2:#e3e8f0;--ghostbd:#c9d4ea;
+    --acc:#1E3A8A;--acch:#162d6b;--accs:#e8edf9;--accbd:#d4ddf3;
+    --blue:#1E3A8A;--blueh:#162d6b;--band:#1E3A8A;
+    --yel:#FCD116;--yelh:#e6bd00;--yels:#fef6cc;--yelbd:#f3e6a3;--yelink:#9a7c00;
+    --red:#CE1126;--reds:#fbe3e6;--redbd:#f3ccd2;
+    --grn:#1E3A8A;--grns:#e8edf9;
+    --on:#ffffff;--inkyel:#1E3A8A;
+    --sh:rgba(30,58,138,.07);--shh:rgba(30,58,138,.14);--shc:rgba(30,58,138,.08);
+    --hero:radial-gradient(circle at 6% 10%,rgba(252,209,22,.18),transparent 38%),radial-gradient(circle at 94% 4%,rgba(30,58,138,.09),transparent 44%),#F5F7FA;
+    --stripe1:#e6ecf8;--stripe2:#eef2fb;
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a1020;--srf:#18233f;--srf2:#111a2e;--soft:#1e2a46;
+    --txt:#eef2fa;--txs:#b6c3da;--txm:#8c9bb8;
+    --bd:#2b3a57;--bd2:#34435f;--ghostbd:#3c4f76;
+    --acc:#9bb6f5;--acch:#bcd0fa;--accs:#1d3060;--accbd:#31466f;
+    --blue:#3460c4;--blueh:#426fd6;--band:#15233f;
+    --yel:#FCD116;--yelh:#e6bd00;--yels:#332d16;--yelbd:#534a23;--yelink:#f6d65a;
+    --red:#f37b8b;--reds:#3f1f25;--redbd:#5e2c33;
+    --grn:#54cf95;--grns:#13301f;
+    --on:#ffffff;--inkyel:#1E3A8A;
+    --sh:rgba(0,0,0,.5);--shh:rgba(0,0,0,.62);--shc:rgba(0,0,0,.5);
+    --hero:radial-gradient(circle at 4% 8%,rgba(252,209,22,.08),transparent 42%),radial-gradient(circle at 96% 2%,rgba(52,96,196,.22),transparent 48%),#0a1020;
+    --stripe1:#18233f;--stripe2:#111a2e;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:'Poppins',system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--txt);-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;transition:background-color .25s ease,color .25s ease;}
+  a{text-decoration:none;color:inherit;}
+  button{font-family:inherit;}
+  ::selection{background:#FCD116;color:#1E3A8A;}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column;background:var(--bg);">
+
+  <!-- ============ HEADER ============ -->
+  <header data-screen-label="Header" style="position:sticky;top:0;z-index:60;background:var(--srf);border-bottom:1px solid var(--bd);box-shadow:0 1px 0 var(--shc);">
+    <div style="max-width:1140px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px;">
+      <a onClick="{{ goHome }}" aria-label="Donde Ayudar" style="display:inline-flex;align-items:center;gap:10px;cursor:pointer;flex:0 0 auto;">
+        <img src="assets/logo-icon.png" alt="Donde Ayudar" style="height:38px;width:auto;display:block;">
+        <span style="font-weight:700;font-size:18px;color:var(--acc);letter-spacing:-.01em;">Donde Ayudar</span>
+      </a>
+
+      <sc-if value="{{ showDesktopNav }}" hint-placeholder-val="{{ true }}">
+        <nav aria-label="Navegación" style="display:flex;align-items:center;gap:2px;">
+          <a onClick="{{ goCasos }}" style="position:relative;display:inline-flex;align-items:center;padding:9px 12px;border-radius:10px;font-size:14.5px;font-weight:500;cursor:pointer;color:var(--txt);white-space:nowrap;" style-hover="color:var(--acc);">{{ t.navCasos }}<sc-if value="{{ casosActive }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:13px;right:13px;bottom:1px;height:2.5px;border-radius:2px;background:var(--yel);"></span></sc-if></a>
+          <a onClick="{{ goEmpleos }}" style="position:relative;display:inline-flex;align-items:center;padding:9px 12px;border-radius:10px;font-size:14.5px;font-weight:500;cursor:pointer;color:var(--txt);white-space:nowrap;" style-hover="color:var(--acc);">{{ t.navEmpleos }}<sc-if value="{{ empleosActive }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:13px;right:13px;bottom:1px;height:2.5px;border-radius:2px;background:var(--yel);"></span></sc-if></a>
+          <a onClick="{{ goOrgs }}" style="position:relative;display:inline-flex;align-items:center;padding:9px 12px;border-radius:10px;font-size:14.5px;font-weight:500;cursor:pointer;color:var(--txt);white-space:nowrap;" style-hover="color:var(--acc);">{{ t.navOrgs }}<sc-if value="{{ orgsActive }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:13px;right:13px;bottom:1px;height:2.5px;border-radius:2px;background:var(--yel);"></span></sc-if></a>
+          <a onClick="{{ goComo }}" style="position:relative;display:inline-flex;align-items:center;padding:9px 12px;border-radius:10px;font-size:14.5px;font-weight:500;cursor:pointer;color:var(--txt);white-space:nowrap;" style-hover="color:var(--acc);">{{ t.navComo }}<sc-if value="{{ comoActive }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:13px;right:13px;bottom:1px;height:2.5px;border-radius:2px;background:var(--yel);"></span></sc-if></a>
+          <span style="width:1px;height:24px;background:var(--bd);margin:0 8px;"></span>
+          <button onClick="{{ toggleLang }}" title="{{ t.langSwitch }}" aria-label="{{ t.langSwitch }}" style="display:inline-flex;align-items:center;gap:6px;padding:8px 12px;border-radius:999px;border:1.5px solid var(--bd2);background:var(--srf);color:var(--txt);cursor:pointer;font-weight:600;font-size:13px;" style-hover="border-color:var(--acc);color:var(--acc);"><i data-lucide="languages" style="width:16px;height:16px;"></i>{{ langOther }}</button>
+          <button onClick="{{ goPublicar }}" style="margin-left:6px;display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);cursor:pointer;box-shadow:0 6px 16px rgba(252,209,22,.28);transition:transform .15s ease,background .18s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);transform:translateY(-2px);"><i data-lucide="megaphone" style="width:16px;height:16px;"></i>{{ t.ctaPublicar }}</button>
+        </nav>
+      </sc-if>
+
+      <sc-if value="{{ showMobileNav }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <button onClick="{{ toggleLang }}" aria-label="{{ t.langSwitch }}" style="display:inline-flex;align-items:center;gap:5px;padding:8px 11px;border-radius:999px;border:1.5px solid var(--bd2);background:var(--srf);color:var(--txt);cursor:pointer;font-weight:600;font-size:13px;"><i data-lucide="languages" style="width:16px;height:16px;"></i>{{ langOther }}</button>
+          <button onClick="{{ toggleMenu }}" aria-label="Menu" style="display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border:1.5px solid var(--bd2);border-radius:11px;background:var(--srf);color:var(--acc);cursor:pointer;">
+            <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;"><i data-lucide="x" style="width:22px;height:22px;"></i></span></sc-if>
+            <sc-if value="{{ menuClosed }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;"><i data-lucide="menu" style="width:22px;height:22px;"></i></span></sc-if>
+          </button>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ mobileDrawerOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="border-top:1px solid var(--bd);background:var(--srf);box-shadow:0 18px 30px var(--shc);padding:10px 18px 18px;display:flex;flex-direction:column;gap:2px;">
+        <a onClick="{{ goCasos }}" style="padding:14px;border-radius:12px;font-size:16px;font-weight:500;cursor:pointer;color:var(--txt);" style-hover="background:var(--soft);">{{ t.navCasos }}</a>
+        <a onClick="{{ goEmpleos }}" style="padding:14px;border-radius:12px;font-size:16px;font-weight:500;cursor:pointer;color:var(--txt);" style-hover="background:var(--soft);">{{ t.navEmpleos }}</a>
+        <a onClick="{{ goOrgs }}" style="padding:14px;border-radius:12px;font-size:16px;font-weight:500;cursor:pointer;color:var(--txt);" style-hover="background:var(--soft);">{{ t.navOrgs }}</a>
+        <a onClick="{{ goComo }}" style="padding:14px;border-radius:12px;font-size:16px;font-weight:500;cursor:pointer;color:var(--txt);" style-hover="background:var(--soft);">{{ t.navComo }}</a>
+        <button onClick="{{ goPublicar }}" style="margin-top:8px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 20px;border-radius:999px;font-weight:600;font-size:16px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);cursor:pointer;"><i data-lucide="megaphone" style="width:18px;height:18px;"></i>{{ t.ctaPublicar }}</button>
+      </div>
+    </sc-if>
+  </header>
+
+  <main style="flex:1 1 auto;">
+
+  <!-- ============ HOME ============ -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div data-screen-label="Home">
+
+    <!-- HERO -->
+    <section style="position:relative;overflow:hidden;background:var(--hero);">
+      <div style="max-width:1140px;margin:0 auto;padding:clamp(40px,6.5vw,76px) 24px;display:grid;gap:clamp(32px,5vw,60px);grid-template-columns:repeat(auto-fit,minmax(330px,1fr));align-items:center;">
+        <div>
+          <p style="display:inline-flex;align-items:center;gap:8px;text-transform:uppercase;letter-spacing:.12em;font-size:11.5px;font-weight:700;color:var(--acc);margin:0 0 16px;background:var(--accs);padding:7px 14px;border-radius:999px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--yel);"></span>{{ t.heroEyebrow }}</p>
+          <h1 style="font-size:clamp(32px,4.6vw,50px);line-height:1.16;font-weight:800;letter-spacing:-.022em;color:var(--acc);margin:0 0 18px;text-wrap:balance;">{{ t.heroT1 }}<span style="background:linear-gradient(transparent 60%,var(--yel) 60%);padding:0 3px;color:var(--acc);">{{ t.heroT2 }}</span></h1>
+          <p style="font-size:clamp(16.5px,1.5vw,19px);line-height:1.62;color:var(--txs);max-width:56ch;margin:0 0 28px;">{{ t.heroSub }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;">
+            <button onClick="{{ goCasos }}" style="display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15.5px;border:2px solid var(--blue);background:var(--blue);color:var(--on);cursor:pointer;box-shadow:0 8px 22px rgba(30,58,138,.22);transition:transform .15s ease,background .18s ease;" style-hover="background:var(--blueh);transform:translateY(-2px);"><i data-lucide="shield-check" style="width:18px;height:18px;"></i>{{ t.heroCtaCasos }}</button>
+            <button onClick="{{ goEmpleos }}" style="display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15.5px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);cursor:pointer;box-shadow:0 8px 22px rgba(252,209,22,.28);transition:transform .15s ease,background .18s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);transform:translateY(-2px);"><i data-lucide="briefcase" style="width:18px;height:18px;"></i>{{ t.heroCtaEmpleos }}</button>
+            <button onClick="{{ goComo }}" style="display:inline-flex;align-items:center;gap:8px;padding:14px 22px;border-radius:999px;font-weight:600;font-size:15.5px;border:2px solid var(--ghostbd);background:transparent;color:var(--acc);cursor:pointer;transition:all .15s ease;" style-hover="background:var(--accs);border-color:var(--acc);">{{ t.heroCtaComo }}</button>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;">
+            <span style="display:inline-flex;align-items:center;gap:7px;color:var(--txs);font-size:13.5px;font-weight:500;"><span style="display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;"><i data-lucide="check" style="width:13px;height:13px;"></i></span>{{ t.trust1 }}</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;color:var(--txs);font-size:13.5px;font-weight:500;"><span style="display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;"><i data-lucide="check" style="width:13px;height:13px;"></i></span>{{ t.trust2 }}</span>
+            <span style="display:inline-flex;align-items:center;gap:7px;color:var(--txs);font-size:13.5px;font-weight:500;"><span style="display:inline-flex;width:20px;height:20px;border-radius:50%;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;"><i data-lucide="check" style="width:13px;height:13px;"></i></span>{{ t.trust3 }}</span>
+          </div>
+        </div>
+
+        <div style="position:relative;max-width:440px;margin-inline:auto;width:100%;">
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:22px;box-shadow:0 16px 40px var(--sh);overflow:hidden;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;border-bottom:1px solid var(--bd);background:var(--srf2);">
+              <span style="display:inline-flex;align-items:center;gap:8px;"><img src="assets/logo-icon.png" alt="" style="width:22px;height:auto;"><span style="font-weight:700;font-size:13.5px;color:var(--acc);">Donde Ayudar</span></span>
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:999px;font-size:10.5px;font-weight:700;background:var(--accs);color:var(--acc);"><i data-lucide="shield-check" style="width:13px;height:13px;"></i>{{ t.stVerificado }}</span>
+            </div>
+            <div style="padding:18px 16px;display:flex;flex-direction:column;gap:14px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;">
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><span style="display:inline-flex;width:38px;height:38px;border-radius:50%;background:var(--reds);color:var(--red);align-items:center;justify-content:center;"><i data-lucide="hand-heart" style="width:19px;height:19px;"></i></span><span style="font-size:11px;font-weight:600;color:var(--txs);">{{ t.flowAyuda }}</span></div>
+                <span style="flex:0 0 16px;height:2px;background:var(--bd2);border-radius:2px;margin-bottom:18px;"></span>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><span style="display:inline-flex;width:38px;height:38px;border-radius:50%;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;"><i data-lucide="handshake" style="width:19px;height:19px;"></i></span><span style="font-size:11px;font-weight:600;color:var(--txs);">{{ t.flowOrg }}</span></div>
+                <span style="flex:0 0 16px;height:2px;background:var(--bd2);border-radius:2px;margin-bottom:18px;"></span>
+                <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;"><span style="display:inline-flex;width:38px;height:38px;border-radius:50%;background:var(--yels);color:var(--yelink);align-items:center;justify-content:center;"><i data-lucide="briefcase" style="width:19px;height:19px;"></i></span><span style="font-size:11px;font-weight:600;color:var(--txs);">{{ t.flowEmpleo }}</span></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--bd);border-radius:14px;">
+                <span style="display:inline-flex;width:36px;height:36px;border-radius:10px;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="shield-check" style="width:18px;height:18px;"></i></span>
+                <span style="flex:1;min-width:0;"><span style="display:block;font-weight:700;font-size:13px;color:var(--txt);line-height:1.2;">{{ t.heroCardCaso }}</span><span style="display:block;font-size:11.5px;color:var(--txm);line-height:1.3;">{{ t.heroCardCasoSub }}</span></span>
+                <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700;background:var(--accs);color:var(--acc);"><span style="width:5px;height:5px;border-radius:50%;background:currentColor;"></span>{{ t.stVerificado }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--bd);border-radius:14px;">
+                <span style="display:inline-flex;width:36px;height:36px;border-radius:10px;background:var(--yels);color:var(--yelink);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="briefcase" style="width:18px;height:18px;"></i></span>
+                <span style="flex:1;min-width:0;"><span style="display:block;font-weight:700;font-size:13px;color:var(--txt);line-height:1.2;">{{ t.heroCardEmpleo }}</span><span style="display:block;font-size:11.5px;color:var(--txm);line-height:1.3;">{{ t.heroCardEmpleoSub }}</span></span>
+                <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700;background:var(--yels);color:var(--yelink);">{{ t.fRemoto }}</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:11px;padding:12px;border:1px solid var(--bd);border-radius:14px;">
+                <span style="display:inline-flex;width:36px;height:36px;border-radius:10px;background:var(--blue);color:var(--on);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="handshake" style="width:18px;height:18px;"></i></span>
+                <span style="flex:1;min-width:0;"><span style="display:block;font-weight:700;font-size:13px;color:var(--txt);line-height:1.2;">{{ t.heroCardOrg }}</span><span style="display:block;font-size:11.5px;color:var(--txm);line-height:1.3;">{{ t.heroCardOrgSub }}</span></span>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:8px;padding-top:2px;">
+                <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;background:var(--srf2);color:var(--txs);border:1px solid var(--bd2);"><i data-lucide="shield-check" style="width:13px;height:13px;color:var(--acc);"></i>{{ t.trust1 }}</span>
+                <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:11px;font-weight:600;background:var(--srf2);color:var(--txs);border:1px solid var(--bd2);"><i data-lucide="lock" style="width:13px;height:13px;color:var(--acc);"></i>{{ t.trust2 }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MENSAJE CLAVE -->
+    <section style="background:var(--band);position:relative;overflow:hidden;">
+      <div style="position:absolute;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(252,209,22,.22),transparent 70%);top:-160px;right:-90px;pointer-events:none;"></div>
+      <div style="max-width:1140px;margin:0 auto;padding:clamp(34px,5vw,56px) 24px;display:flex;align-items:center;gap:26px;flex-wrap:wrap;position:relative;">
+        <span style="width:66px;height:66px;border-radius:19px;background:#ffffff;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;box-shadow:0 12px 26px rgba(0,0,0,.2);"><img src="assets/logo-icon.png" alt="" style="width:46px;height:auto;"></span>
+        <p style="margin:0;color:#ffffff;font-size:clamp(20px,2.5vw,29px);line-height:1.38;font-weight:600;max-width:36ch;flex:1 1 320px;">{{ t.mensaje1 }}<span style="color:var(--yel);">{{ t.mensaje2 }}</span></p>
+      </div>
+    </section>
+
+    <!-- 3 PASOS -->
+    <section style="padding:clamp(56px,8vw,88px) 0;">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--red);margin:0 0 10px;">{{ t.pasosEyebrow }}</p>
+        <h2 style="font-size:clamp(26px,3.4vw,38px);line-height:1.14;font-weight:700;letter-spacing:-.01em;color:var(--acc);margin:0 0 12px;">{{ t.pasosH2 }}</h2>
+        <p style="font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--txs);max-width:56ch;margin:0 0 38px;">{{ t.pasosLead }}</p>
+        <div style="display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));">
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:28px 26px;box-shadow:0 12px 32px var(--sh);display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:50px;height:50px;border-radius:15px;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;"><i data-lucide="shield-check" style="width:24px;height:24px;"></i></span><span style="font-size:38px;font-weight:800;color:var(--srf2);line-height:1;">01</span></div>
+            <h3 style="font-size:19px;font-weight:700;color:var(--acc);margin:6px 0 0;">{{ t.paso1T }}</h3>
+            <p style="margin:0;color:var(--txs);font-size:15px;line-height:1.6;">{{ t.paso1X }}</p>
+            <a onClick="{{ goCasos }}" style="margin-top:6px;display:inline-flex;align-items:center;gap:6px;color:var(--acc);font-weight:600;font-size:14.5px;cursor:pointer;" style-hover="gap:10px;">{{ t.paso1L }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a>
+          </div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:28px 26px;box-shadow:0 12px 32px var(--sh);display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:50px;height:50px;border-radius:15px;background:var(--yels);color:var(--yelink);align-items:center;justify-content:center;"><i data-lucide="lock" style="width:23px;height:23px;"></i></span><span style="font-size:38px;font-weight:800;color:var(--srf2);line-height:1;">02</span></div>
+            <h3 style="font-size:19px;font-weight:700;color:var(--acc);margin:6px 0 0;">{{ t.paso2T }}</h3>
+            <p style="margin:0;color:var(--txs);font-size:15px;line-height:1.6;">{{ t.paso2X }}</p>
+            <a onClick="{{ goComo }}" style="margin-top:6px;display:inline-flex;align-items:center;gap:6px;color:var(--acc);font-weight:600;font-size:14.5px;cursor:pointer;" style-hover="gap:10px;">{{ t.paso2L }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a>
+          </div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:28px 26px;box-shadow:0 12px 32px var(--sh);display:flex;flex-direction:column;gap:14px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:50px;height:50px;border-radius:15px;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;"><i data-lucide="briefcase" style="width:23px;height:23px;"></i></span><span style="font-size:38px;font-weight:800;color:var(--srf2);line-height:1;">03</span></div>
+            <h3 style="font-size:19px;font-weight:700;color:var(--acc);margin:6px 0 0;">{{ t.paso3T }}</h3>
+            <p style="margin:0;color:var(--txs);font-size:15px;line-height:1.6;">{{ t.paso3X }}</p>
+            <a onClick="{{ goEmpleos }}" style="margin-top:6px;display:inline-flex;align-items:center;gap:6px;color:var(--acc);font-weight:600;font-size:14.5px;cursor:pointer;" style-hover="gap:10px;">{{ t.paso3L }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CASOS DESTACADOS -->
+    <section style="padding:clamp(48px,7vw,80px) 0;background:var(--srf2);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:34px;">
+          <div><p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--red);margin:0 0 8px;">{{ t.casosEyebrow }}</p><h2 style="font-size:clamp(26px,3.4vw,36px);line-height:1.14;font-weight:700;letter-spacing:-.01em;color:var(--acc);margin:0;">{{ t.casosH2 }}</h2></div>
+          <a onClick="{{ goCasos }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--ghostbd);background:var(--srf);color:var(--acc);cursor:pointer;transition:all .15s ease;" style-hover="background:var(--accs);border-color:var(--acc);">{{ t.verTodos }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a>
+        </div>
+        <div style="display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));">
+          <sc-for list="{{ featuredCasos }}" as="caso" hint-placeholder-count="3">
+            <article onClick="{{ caso.onOpen }}" style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:13px;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;" style-hover="transform:translateY(-5px);box-shadow:0 20px 46px var(--shh);border-color:var(--accbd);">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                <span style="{{ caso.badge.style }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>{{ caso.badge.label }}</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;color:var(--txm);font-size:13px;"><i data-lucide="map-pin" style="width:14px;height:14px;"></i>{{ caso.location }}</span>
+              </div>
+              <h3 style="font-size:18.5px;font-weight:700;color:var(--acc);margin:2px 0 0;line-height:1.3;">{{ caso.title }}</h3>
+              <p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ caso.summary }}</p>
+              <div><span style="text-transform:uppercase;letter-spacing:.07em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.necesidadPrincipal }}</span><div style="font-weight:600;color:var(--txt);font-size:15px;margin-top:3px;">{{ caso.mainNeed }}</div></div>
+              <ul style="list-style:none;display:flex;flex-wrap:wrap;gap:7px;padding:0;margin:2px 0 0;">
+                <sc-for list="{{ caso.topSkills }}" as="s" hint-placeholder-count="3"><li style="display:inline-flex;background:var(--soft);border:1px solid var(--bd);border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--txs);">{{ s.text }}</li></sc-for>
+              </ul>
+              <div style="margin-top:auto;padding-top:8px;display:flex;flex-direction:column;gap:10px;">
+                <p style="margin:0;color:var(--txm);font-size:13px;">{{ t.verificadoPor }} <strong style="color:var(--txt);font-weight:600;">{{ caso.verifiedBy }}</strong></p>
+                <sc-if value="{{ caso.hasDonation }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:var(--yels);color:var(--yelink);"><i data-lucide="hand-coins" style="width:13px;height:13px;"></i>{{ t.badgeDonacion }}</span></sc-if>
+                <span style="display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 18px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--ghostbd);background:var(--srf);color:var(--acc);transition:all .15s ease;" style-hover="background:var(--accs);border-color:var(--acc);">{{ caso.ctaLabel }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- EMPLEOS DESTACADOS -->
+    <section style="padding:clamp(48px,7vw,80px) 0;">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:34px;">
+          <div><p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--red);margin:0 0 8px;">{{ t.empleosEyebrow }}</p><h2 style="font-size:clamp(26px,3.4vw,36px);line-height:1.14;font-weight:700;letter-spacing:-.01em;color:var(--acc);margin:0;">{{ t.empleosH2 }}</h2></div>
+          <a onClick="{{ goEmpleos }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 18px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--ghostbd);background:var(--srf);color:var(--acc);cursor:pointer;transition:all .15s ease;" style-hover="background:var(--accs);border-color:var(--acc);">{{ t.verTodos }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></a>
+        </div>
+        <div style="display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));">
+          <sc-for list="{{ featuredEmpleos }}" as="empleo" hint-placeholder-count="3">
+            <article onClick="{{ empleo.onOpen }}" style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;" style-hover="transform:translateY(-5px);box-shadow:0 20px 46px var(--shh);border-color:var(--accbd);">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                <span style="{{ empleo.badge.style }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>{{ empleo.badge.label }}</span>
+                <span style="color:var(--txm);font-size:12.5px;white-space:nowrap;">{{ empleo.dateLabel }}</span>
+              </div>
+              <h3 style="font-size:18.5px;font-weight:700;color:var(--acc);margin:2px 0 0;line-height:1.3;">{{ empleo.title }}</h3>
+              <div style="display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--txs);font-size:13.5px;"><span style="display:inline-flex;align-items:center;gap:6px;"><i data-lucide="building-2" style="width:14px;height:14px;color:var(--txm);"></i>{{ empleo.company }}</span><span style="display:inline-flex;align-items:center;gap:6px;"><i data-lucide="map-pin" style="width:14px;height:14px;color:var(--txm);"></i>{{ empleo.place }}</span></div>
+              <p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ empleo.shortDesc }}</p>
+              <span style="display:inline-flex;align-items:center;gap:6px;color:var(--grn);font-size:12.5px;font-weight:600;"><i data-lucide="badge-check" style="width:15px;height:15px;"></i>{{ empleo.verifiedLabel }}</span>
+              <div style="margin-top:auto;padding-top:6px;">
+                <span style="display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px 18px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);transition:all .15s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);">{{ t.verAplicar }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUST -->
+    <section style="padding:clamp(56px,8vw,88px) 0;background:var(--srf2);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="text-align:center;max-width:60ch;margin:0 auto 40px;">
+          <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--acc);margin:0 0 10px;">{{ t.trustEyebrow }}</p>
+          <h2 style="font-size:clamp(26px,3.4vw,38px);line-height:1.14;font-weight:700;letter-spacing:-.01em;color:var(--acc);margin:0 0 12px;">{{ t.trustH2 }}</h2>
+          <p style="font-size:clamp(16px,1.5vw,18px);line-height:1.6;color:var(--txs);margin:0;">{{ t.trustLead }}</p>
+        </div>
+        <div style="display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));margin-bottom:30px;">
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:11px;"><span style="display:inline-flex;width:46px;height:46px;border-radius:13px;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;"><i data-lucide="hand-coins" style="width:23px;height:23px;"></i></span><h3 style="font-size:16.5px;font-weight:700;color:var(--txt);margin:4px 0 0;">{{ t.tc1T }}</h3><p style="margin:0;color:var(--txm);font-size:14px;line-height:1.55;">{{ t.tc1X }}</p></div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:11px;"><span style="display:inline-flex;width:46px;height:46px;border-radius:13px;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;"><i data-lucide="shield-check" style="width:23px;height:23px;"></i></span><h3 style="font-size:16.5px;font-weight:700;color:var(--txt);margin:4px 0 0;">{{ t.tc2T }}</h3><p style="margin:0;color:var(--txm);font-size:14px;line-height:1.55;">{{ t.tc2X }}</p></div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:11px;"><span style="display:inline-flex;width:46px;height:46px;border-radius:13px;background:var(--yels);color:var(--yelink);align-items:center;justify-content:center;"><i data-lucide="eye-off" style="width:23px;height:23px;"></i></span><h3 style="font-size:16.5px;font-weight:700;color:var(--txt);margin:4px 0 0;">{{ t.tc3T }}</h3><p style="margin:0;color:var(--txm);font-size:14px;line-height:1.55;">{{ t.tc3X }}</p></div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:11px;"><span style="display:inline-flex;width:46px;height:46px;border-radius:13px;background:var(--reds);color:var(--red);align-items:center;justify-content:center;"><i data-lucide="heart-handshake" style="width:23px;height:23px;"></i></span><h3 style="font-size:16.5px;font-weight:700;color:var(--txt);margin:4px 0 0;">{{ t.tc4T }}</h3><p style="margin:0;color:var(--txm);font-size:14px;line-height:1.55;">{{ t.tc4X }}</p></div>
+        </div>
+        <div style="display: flex; gap: 14px; background: var(--accs); border: 1px solid var(--accbd); border-left: 4px solid var(--acc); border-radius: 14px; padding: 18px 20px; border-style: none">
+          <i data-lucide="info" style="width:22px;height:22px;color:var(--acc);flex:0 0 auto;margin-top:1px;"></i>
+          <p style="margin:0;font-size:14.5px;line-height:1.6;color:var(--txt);"><strong style="display:block;margin-bottom:2px;color:var(--acc);">{{ t.discTitle }}</strong>{{ t.discText }}</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section style="padding:clamp(48px,7vw,80px) 0;">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="background:var(--band);border-radius:26px;padding:clamp(36px,5vw,60px);text-align:center;position:relative;overflow:hidden;box-shadow:0 24px 50px var(--shh);">
+          <div style="position:absolute;inset:auto -70px -90px auto;width:280px;height:280px;background:radial-gradient(circle,rgba(252,209,22,.24),transparent 70%);pointer-events:none;"></div>
+          <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:rgba(255,255,255,.72);margin:0 0 12px;position:relative;">{{ t.ctaEyebrow }}</p>
+          <h2 style="font-size:clamp(25px,3.2vw,36px);line-height:1.18;font-weight:700;color:#ffffff;max-width:26ch;margin:0 auto 14px;position:relative;">{{ t.ctaH2 }}</h2>
+          <p style="color:rgba(255,255,255,.88);max-width:56ch;margin:0 auto 28px;font-size:16.5px;line-height:1.6;position:relative;">{{ t.ctaText }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;">
+            <button onClick="{{ goPublicar }}" style="display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15.5px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);cursor:pointer;transition:transform .15s ease,background .18s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);transform:translateY(-2px);"><i data-lucide="plus" style="width:18px;height:18px;"></i>{{ t.ctaBtn1 }}</button>
+            <button onClick="{{ goComo }}" style="display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15.5px;border:2px solid rgba(255,255,255,.55);background:transparent;color:#ffffff;cursor:pointer;transition:all .15s ease;" style-hover="background:rgba(255,255,255,.14);border-color:#ffffff;">{{ t.ctaBtn2 }}</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ isCasos }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Casos">
+    <section style="background:radial-gradient(circle at 12% 0%,rgba(30,58,138,.07),transparent 46%),var(--srf);border-bottom:1px solid var(--bd);">
+      <div style="max-width:1140px;margin:0 auto;padding:clamp(36px,5vw,56px) 24px;">
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--red);margin:0 0 10px;">{{ t.casosPEyebrow }}</p>
+        <h1 style="font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:var(--acc);margin:0 0 14px;">{{ t.casosPH1 }}</h1>
+        <p style="font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--txs);max-width:62ch;margin:0;">{{ t.casosPLead }}</p>
+      </div>
+    </section>
+    <section style="padding:clamp(32px,5vw,48px) 0 clamp(56px,8vw,88px);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="display: flex; gap: 13px; background: var(--accs); border: 1px solid var(--accbd); border-right: none; border-left: 4px solid var(--acc); border-radius: 14px; padding: 16px 18px; margin-bottom: 26px; border-style: none">
+          <i data-lucide="shield-check" style="width:21px;height:21px;color:var(--acc);flex:0 0 auto;margin-top:1px;"></i>
+          <p style="margin:0;font-size:14px;line-height:1.55;color:var(--txt);"><strong style="display:block;margin-bottom:2px;color:var(--acc);">{{ t.casosNoticeT }}</strong>{{ t.casosNoticeX }}</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:26px;">
+          <sc-for list="{{ casoFilterDefs }}" as="f" hint-placeholder-count="4">
+            <button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }}<span style="{{ f.countStyle }}">{{ f.count }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ casosEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:56px 20px;color:var(--txm);border:1px dashed var(--accbd);border-radius:20px;background:var(--srf);">{{ t.casosEmpty }}</div>
+        </sc-if>
+        <div style="display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));">
+          <sc-for list="{{ casosFiltered }}" as="caso" hint-placeholder-count="4">
+            <article onClick="{{ caso.onOpen }}" style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:13px;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;" style-hover="transform:translateY(-5px);box-shadow:0 20px 46px var(--shh);border-color:var(--accbd);">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                <span style="{{ caso.badge.style }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>{{ caso.badge.label }}</span>
+                <span style="display:inline-flex;align-items:center;gap:5px;color:var(--txm);font-size:13px;"><i data-lucide="map-pin" style="width:14px;height:14px;"></i>{{ caso.location }}</span>
+              </div>
+              <h3 style="font-size:18.5px;font-weight:700;color:var(--acc);margin:2px 0 0;line-height:1.3;">{{ caso.title }}</h3>
+              <p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ caso.summary }}</p>
+              <div><span style="text-transform:uppercase;letter-spacing:.07em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.necesidadPrincipal }}</span><div style="font-weight:600;color:var(--txt);font-size:15px;margin-top:3px;">{{ caso.mainNeed }}</div></div>
+              <ul style="list-style:none;display:flex;flex-wrap:wrap;gap:7px;padding:0;margin:2px 0 0;">
+                <sc-for list="{{ caso.topSkills }}" as="s" hint-placeholder-count="3"><li style="display:inline-flex;background:var(--soft);border:1px solid var(--bd);border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--txs);">{{ s.text }}</li></sc-for>
+              </ul>
+              <div style="margin-top:auto;padding-top:8px;display:flex;flex-direction:column;gap:10px;">
+                <p style="margin:0;color:var(--txm);font-size:13px;">{{ t.verificadoPor }} <strong style="color:var(--txt);font-weight:600;">{{ caso.verifiedBy }}</strong></p>
+                <sc-if value="{{ caso.hasDonation }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;align-self:flex-start;padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:var(--yels);color:var(--yelink);"><i data-lucide="hand-coins" style="width:13px;height:13px;"></i>{{ t.badgeDonacion }}</span></sc-if>
+                <span style="display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:11px 18px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--ghostbd);background:var(--srf);color:var(--acc);transition:all .15s ease;" style-hover="background:var(--accs);border-color:var(--acc);">{{ caso.ctaLabel }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+  <sc-if value="{{ isEmpleos }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Empleos">
+    <section style="background:radial-gradient(circle at 12% 0%,rgba(252,209,22,.12),transparent 46%),var(--srf);border-bottom:1px solid var(--bd);">
+      <div style="max-width:1140px;margin:0 auto;padding:clamp(36px,5vw,56px) 24px;">
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--red);margin:0 0 10px;">{{ t.empleosPEyebrow }}</p>
+        <h1 style="font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:var(--acc);margin:0 0 14px;">{{ t.empleosPH1 }}</h1>
+        <p style="font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--txs);max-width:62ch;margin:0;">{{ t.empleosPLead }}</p>
+      </div>
+    </section>
+    <section style="padding:clamp(32px,5vw,48px) 0 clamp(56px,8vw,88px);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="display: flex; gap: 13px; background: var(--yels); border: 1px solid var(--yelbd); border-right: none; border-left: 4px solid var(--yelh); border-radius: 14px; padding: 16px 18px; margin-bottom: 26px; border-style: none" data-comment-anchor="ada5add5ba-div">
+          <i data-lucide="info" style="width:21px;height:21px;color:var(--yelink);flex:0 0 auto;margin-top:1px;"></i>
+          <p style="margin:0;font-size:14px;line-height:1.55;color:var(--yelink);"><strong style="display:block;margin-bottom:2px;color:var(--yelink);">{{ t.empleosNoticeT }}</strong>{{ t.empleosNoticeX }}</p>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:26px;">
+          <sc-for list="{{ empleoFilterDefs }}" as="f" hint-placeholder-count="4">
+            <button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }}<span style="{{ f.countStyle }}">{{ f.count }}</span></button>
+          </sc-for>
+        </div>
+        <sc-if value="{{ empleosEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:56px 20px;color:var(--txm);border:1px dashed var(--accbd);border-radius:20px;background:var(--srf);">{{ t.empleosEmpty }}</div>
+        </sc-if>
+        <div style="display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));">
+          <sc-for list="{{ empleosFiltered }}" as="empleo" hint-placeholder-count="4">
+            <article onClick="{{ empleo.onOpen }}" style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;cursor:pointer;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;" style-hover="transform:translateY(-5px);box-shadow:0 20px 46px var(--shh);border-color:var(--accbd);">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;">
+                <span style="{{ empleo.badge.style }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>{{ empleo.badge.label }}</span>
+                <span style="color:var(--txm);font-size:12.5px;white-space:nowrap;">{{ empleo.dateLabel }}</span>
+              </div>
+              <h3 style="font-size:18.5px;font-weight:700;color:var(--acc);margin:2px 0 0;line-height:1.3;">{{ empleo.title }}</h3>
+              <div style="display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--txs);font-size:13.5px;"><span style="display:inline-flex;align-items:center;gap:6px;"><i data-lucide="building-2" style="width:14px;height:14px;color:var(--txm);"></i>{{ empleo.company }}</span><span style="display:inline-flex;align-items:center;gap:6px;"><i data-lucide="map-pin" style="width:14px;height:14px;color:var(--txm);"></i>{{ empleo.place }}</span></div>
+              <p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ empleo.shortDesc }}</p>
+              <span style="display:inline-flex;align-items:center;gap:6px;color:var(--grn);font-size:12.5px;font-weight:600;"><i data-lucide="badge-check" style="width:15px;height:15px;"></i>{{ empleo.verifiedLabel }}</span>
+              <div style="margin-top:auto;padding-top:6px;">
+                <span style="display:inline-flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:12px 18px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);transition:all .15s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);">{{ t.verAplicar }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+  <sc-if value="{{ isOrgs }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Organizaciones">
+    <section style="background:radial-gradient(circle at 12% 0%,rgba(30,58,138,.07),transparent 46%),var(--srf);border-bottom:1px solid var(--bd);">
+      <div style="max-width:1140px;margin:0 auto;padding:clamp(36px,5vw,56px) 24px;">
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--red);margin:0 0 10px;">{{ t.orgsPEyebrow }}</p>
+        <h1 style="font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:var(--acc);margin:0 0 14px;">{{ t.orgsPH1 }}</h1>
+        <p style="font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--txs);max-width:62ch;margin:0;">{{ t.orgsPLead }}</p>
+      </div>
+    </section>
+    <section style="padding:clamp(32px,5vw,48px) 0 clamp(56px,8vw,88px);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));margin-bottom:30px;">
+          <sc-for list="{{ orgs }}" as="org" hint-placeholder-count="4">
+            <article style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;" style-hover="transform:translateY(-4px);box-shadow:0 18px 44px var(--shh);border-color:var(--accbd);">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+                <span style="{{ org.typeBadge.style }}">{{ org.type }}</span>
+                <span style="{{ org.allyBadge.style }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>{{ org.allyBadge.label }}</span>
+              </div>
+              <h3 style="font-size:18.5px;font-weight:700;color:var(--acc);margin:4px 0 0;line-height:1.3;">{{ org.title }}</h3>
+              <span style="display:inline-flex;align-items:center;gap:5px;color:var(--txm);font-size:13.5px;"><i data-lucide="map-pin" style="width:14px;height:14px;"></i>{{ org.location }}</span>
+              <p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ org.description }}</p>
+              <div><span style="text-transform:uppercase;letter-spacing:.07em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.areasApoyo }}</span>
+                <ul style="list-style:none;display:flex;flex-wrap:wrap;gap:7px;padding:0;margin:6px 0 0;">
+                  <sc-for list="{{ org.areasList }}" as="a" hint-placeholder-count="3"><li style="display:inline-flex;background:var(--soft);border:1px solid var(--bd);border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--txs);">{{ a.text }}</li></sc-for>
+                </ul>
+              </div>
+              <div style="margin-top:auto;padding-top:10px;display:flex;flex-wrap:wrap;gap:10px;">
+                <a href="{{ org.contactHref }}" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;border:2px solid var(--blue);background:var(--blue);color:var(--on);cursor:pointer;transition:all .15s ease;" style-hover="background:var(--blueh);border-color:var(--blueh);"><i data-lucide="mail" style="width:15px;height:15px;"></i>{{ org.contactLabel }}</a>
+                <sc-if value="{{ org.hasWebsite }}" hint-placeholder-val="{{ false }}">
+                  <a href="{{ org.website }}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:7px;padding:10px 18px;border-radius:999px;font-weight:600;font-size:14px;border:2px solid var(--ghostbd);background:var(--srf);color:var(--acc);cursor:pointer;transition:all .15s ease;" style-hover="background:var(--accs);border-color:var(--acc);">{{ t.sitioWeb }}<i data-lucide="arrow-up-right" style="width:15px;height:15px;"></i></a>
+                </sc-if>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+        <div style="display: flex; gap: 13px; background: var(--accs); border: 1px solid var(--accbd); border-left: 4px solid var(--acc); border-radius: 14px; padding: 18px 20px; align-items: center; flex-wrap: wrap; border-style: none">
+          <i data-lucide="handshake" style="width:24px;height:24px;color:var(--acc);flex:0 0 auto;"></i>
+          <p style="margin:0;font-size:14.5px;line-height:1.55;color:var(--txt);flex:1 1 300px;"><strong style="color:var(--acc);">{{ t.sumarseT }}</strong> {{ t.sumarseX }}</p>
+          <button onClick="{{ goPublicar }}" style="display:inline-flex;align-items:center;gap:7px;padding:11px 20px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);cursor:pointer;transition:all .15s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);">{{ t.sumarseBtn }}<i data-lucide="arrow-right" style="width:16px;height:16px;"></i></button>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+  <sc-if value="{{ isComo }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Cómo funciona">
+    <section style="background:radial-gradient(circle at 12% 0%,rgba(30,58,138,.07),transparent 46%),var(--srf);border-bottom:1px solid var(--bd);">
+      <div style="max-width:1140px;margin:0 auto;padding:clamp(36px,5vw,56px) 24px;">
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--red);margin:0 0 10px;">{{ t.comoEyebrow }}</p>
+        <h1 style="font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:var(--acc);margin:0 0 14px;">{{ t.comoH1 }}</h1>
+        <p style="font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--txs);max-width:62ch;margin:0;">{{ t.comoLead }}</p>
+      </div>
+    </section>
+    <section style="padding:clamp(48px,7vw,76px) 0;">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));">
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:48px;height:48px;border-radius:14px;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;"><i data-lucide="layers" style="width:23px;height:23px;"></i></span><span style="font-size:34px;font-weight:800;color:var(--srf2);line-height:1;">01</span></div><h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 0;">{{ t.cf1T }}</h3><p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ t.cf1X }}</p></div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:48px;height:48px;border-radius:14px;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;"><i data-lucide="users" style="width:23px;height:23px;"></i></span><span style="font-size:34px;font-weight:800;color:var(--srf2);line-height:1;">02</span></div><h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 0;">{{ t.cf2T }}</h3><p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ t.cf2X }}</p></div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:48px;height:48px;border-radius:14px;background:var(--yels);color:var(--yelink);align-items:center;justify-content:center;"><i data-lucide="eye-off" style="width:23px;height:23px;"></i></span><span style="font-size:34px;font-weight:800;color:var(--srf2);line-height:1;">03</span></div><h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 0;">{{ t.cf3T }}</h3><p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ t.cf3X }}</p></div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:48px;height:48px;border-radius:14px;background:var(--reds);color:var(--red);align-items:center;justify-content:center;"><i data-lucide="hand-coins" style="width:23px;height:23px;"></i></span><span style="font-size:34px;font-weight:800;color:var(--srf2);line-height:1;">04</span></div><h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 0;">{{ t.cf4T }}</h3><p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ t.cf4X }}</p></div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:48px;height:48px;border-radius:14px;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;"><i data-lucide="list-checks" style="width:23px;height:23px;"></i></span><span style="font-size:34px;font-weight:800;color:var(--srf2);line-height:1;">05</span></div><h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 0;">{{ t.cf5T }}</h3><p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ t.cf5X }}</p></div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 10px 30px var(--sh);display:flex;flex-direction:column;gap:12px;"><div style="display:flex;align-items:center;justify-content:space-between;"><span style="display:inline-flex;width:48px;height:48px;border-radius:14px;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;"><i data-lucide="trending-up" style="width:23px;height:23px;"></i></span><span style="font-size:34px;font-weight:800;color:var(--srf2);line-height:1;">06</span></div><h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:4px 0 0;">{{ t.cf6T }}</h3><p style="margin:0;color:var(--txs);font-size:14.5px;line-height:1.6;">{{ t.cf6X }}</p></div>
+        </div>
+      </div>
+    </section>
+    <section style="padding:clamp(48px,7vw,76px) 0;background:var(--srf2);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--acc);margin:0 0 10px;">{{ t.limEyebrow }}</p>
+        <h2 style="font-size:clamp(24px,3.2vw,34px);line-height:1.14;font-weight:700;letter-spacing:-.01em;color:var(--acc);margin:0 0 28px;">{{ t.limH2 }}</h2>
+        <div style="display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));">
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 10px 30px var(--sh);">
+            <h3 style="display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;color:var(--grn);margin:0 0 16px;"><span style="display:inline-flex;width:30px;height:30px;border-radius:9px;background:var(--grns);align-items:center;justify-content:center;"><i data-lucide="check" style="width:18px;height:18px;"></i></span>{{ t.siT }}</h3>
+            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:11px;">
+              <li style="display:flex;gap:9px;font-size:14.5px;color:var(--txs);line-height:1.5;"><i data-lucide="check" style="width:17px;height:17px;color:var(--grn);flex:0 0 auto;margin-top:2px;"></i>{{ t.si1 }}</li>
+              <li style="display:flex;gap:9px;font-size:14.5px;color:var(--txs);line-height:1.5;"><i data-lucide="check" style="width:17px;height:17px;color:var(--grn);flex:0 0 auto;margin-top:2px;"></i>{{ t.si2 }}</li>
+              <li style="display:flex;gap:9px;font-size:14.5px;color:var(--txs);line-height:1.5;"><i data-lucide="check" style="width:17px;height:17px;color:var(--grn);flex:0 0 auto;margin-top:2px;"></i>{{ t.si3 }}</li>
+              <li style="display:flex;gap:9px;font-size:14.5px;color:var(--txs);line-height:1.5;"><i data-lucide="check" style="width:17px;height:17px;color:var(--grn);flex:0 0 auto;margin-top:2px;"></i>{{ t.si4 }}</li>
+            </ul>
+          </div>
+          <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:26px;box-shadow:0 10px 30px var(--sh);">
+            <h3 style="display:flex;align-items:center;gap:9px;font-size:17px;font-weight:700;color:var(--red);margin:0 0 16px;"><span style="display:inline-flex;width:30px;height:30px;border-radius:9px;background:var(--reds);align-items:center;justify-content:center;"><i data-lucide="x" style="width:18px;height:18px;"></i></span>{{ t.noT }}</h3>
+            <ul style="list-style:none;padding:0;margin:0;display:grid;gap:11px;">
+              <li style="display:flex;gap:9px;font-size:14.5px;color:var(--txs);line-height:1.5;"><i data-lucide="x" style="width:17px;height:17px;color:var(--red);flex:0 0 auto;margin-top:2px;"></i>{{ t.no1 }}</li>
+              <li style="display:flex;gap:9px;font-size:14.5px;color:var(--txs);line-height:1.5;"><i data-lucide="x" style="width:17px;height:17px;color:var(--red);flex:0 0 auto;margin-top:2px;"></i>{{ t.no2 }}</li>
+              <li style="display:flex;gap:9px;font-size:14.5px;color:var(--txs);line-height:1.5;"><i data-lucide="x" style="width:17px;height:17px;color:var(--red);flex:0 0 auto;margin-top:2px;"></i>{{ t.no3 }}</li>
+              <li style="display:flex;gap:9px;font-size:14.5px;color:var(--txs);line-height:1.5;"><i data-lucide="x" style="width:17px;height:17px;color:var(--red);flex:0 0 auto;margin-top:2px;"></i>{{ t.no4 }}</li>
+            </ul>
+          </div>
+        </div>
+        <div style="display: flex; gap: 14px; background: var(--accs); border: 1px solid var(--accbd); border-left: 4px solid var(--acc); border-radius: 14px; padding: 18px 20px; margin-top: 24px; border-style: none">
+          <i data-lucide="heart-handshake" style="width:23px;height:23px;color:var(--acc);flex:0 0 auto;margin-top:1px;"></i>
+          <p style="margin:0;font-size:14.5px;line-height:1.6;color:var(--txt);"><strong style="display:block;margin-bottom:2px;color:var(--acc);">{{ t.compT }}</strong>{{ t.compX }}</p>
+        </div>
+      </div>
+    </section>
+    <section style="padding:clamp(48px,7vw,80px) 0;">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="background:var(--band);border-radius:26px;padding:clamp(36px,5vw,56px);text-align:center;position:relative;overflow:hidden;box-shadow:0 24px 50px var(--shh);">
+          <div style="position:absolute;inset:auto -70px -90px auto;width:280px;height:280px;background:radial-gradient(circle,rgba(252,209,22,.24),transparent 70%);pointer-events:none;"></div>
+          <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:rgba(255,255,255,.72);margin:0 0 12px;position:relative;">{{ t.comoCtaEyebrow }}</p>
+          <h2 style="font-size:clamp(24px,3.2vw,34px);line-height:1.18;font-weight:700;color:#ffffff;max-width:26ch;margin:0 auto 14px;position:relative;">{{ t.comoCtaH2 }}</h2>
+          <p style="color:rgba(255,255,255,.88);max-width:54ch;margin:0 auto 28px;font-size:16px;line-height:1.6;position:relative;">{{ t.comoCtaX }}</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;position:relative;">
+            <button onClick="{{ goPublicar }}" style="display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15.5px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);cursor:pointer;transition:transform .15s ease,background .18s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);transform:translateY(-2px);"><i data-lucide="plus" style="width:18px;height:18px;"></i>{{ t.comoCtaB1 }}</button>
+            <button onClick="{{ goCasos }}" style="display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15.5px;border:2px solid rgba(255,255,255,.55);background:transparent;color:#ffffff;cursor:pointer;transition:all .15s ease;" style-hover="background:rgba(255,255,255,.14);border-color:#ffffff;">{{ t.comoCtaB2 }}</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+  <sc-if value="{{ isPublicar }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Publicar">
+    <section style="background:radial-gradient(circle at 12% 0%,rgba(252,209,22,.12),transparent 46%),var(--srf);border-bottom:1px solid var(--bd);">
+      <div style="max-width:1140px;margin:0 auto;padding:clamp(36px,5vw,56px) 24px;">
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:12px;font-weight:700;color:var(--red);margin:0 0 10px;">{{ t.pubEyebrow }}</p>
+        <h1 style="font-size:clamp(30px,4vw,44px);line-height:1.1;font-weight:800;letter-spacing:-.02em;color:var(--acc);margin:0 0 14px;">{{ t.pubH1 }}</h1>
+        <p style="font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--txs);max-width:62ch;margin:0;">{{ t.pubLead }}</p>
+      </div>
+    </section>
+    <section style="padding:clamp(36px,5vw,56px) 0 clamp(56px,8vw,88px);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <div style="display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start;">
+          <div style="flex:1 1 440px;min-width:0;display:flex;flex-direction:column;gap:24px;">
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button onClick="{{ onTabJob }}" style="{{ tabJobStyle }}"><i data-lucide="briefcase" style="width:17px;height:17px;"></i>{{ t.ctaPublicar }}</button>
+              <button onClick="{{ onTabOrg }}" style="{{ tabOrgStyle }}"><i data-lucide="handshake" style="width:17px;height:17px;"></i>{{ t.footConectar }}</button>
+            </div>
+            <sc-if value="{{ isJobTab }}" hint-placeholder-val="{{ true }}">
+            <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:clamp(22px,3vw,30px);box-shadow:0 12px 32px var(--sh);">
+              <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:0 0 6px;">{{ t.pubJobT }}</h2>
+              <p style="color:var(--txm);font-size:14px;line-height:1.55;margin:0 0 22px;">{{ t.pubJobSub }}</p>
+              <sc-if value="{{ sentJob }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:13px;align-items:flex-start;background:var(--grns);border:1px solid var(--grn);border-radius:14px;padding:20px;"><i data-lucide="circle-check-big" style="width:24px;height:24px;color:var(--grn);flex:0 0 auto;margin-top:1px;"></i><div><strong style="display:block;color:var(--grn);font-size:15.5px;margin-bottom:3px;">{{ t.pubSentT }}</strong><span style="color:var(--txs);font-size:14px;line-height:1.55;">{{ t.pubSentX }}</span></div></div>
+              </sc-if>
+              <sc-if value="{{ notSentJob }}" hint-placeholder-val="{{ true }}">
+                <form onSubmit="{{ submitJob }}">
+                  <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:16px;">
+                    <div><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lTitulo }}</label><input required="" placeholder="{{ t.phTitulo }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                    <div><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lEmpresa }}</label><input required="" placeholder="{{ t.phEmpresa }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                  </div>
+                  <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:16px;">
+                    <div><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lModalidad }}</label><select required="" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"><option>{{ t.optRemoto }}</option><option>{{ t.optPresencial }}</option><option>{{ t.optHibrido }}</option></select></div>
+                    <div><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lUbicacion }}</label><input placeholder="{{ t.phUbicacion }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                  </div>
+                  <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:16px;">
+                    <div><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lCategoria }}</label><input required="" placeholder="{{ t.phCategoria }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                    <div><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lCorreo }}</label><input required="" type="email" placeholder="{{ t.phCorreo }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                  </div>
+                  <div style="margin-bottom:16px;"><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lDescripcion }}</label><textarea required="" rows="4" placeholder="{{ t.phDescripcion }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);resize:vertical;" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></textarea></div>
+                  <div style="margin-bottom:22px;"><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lLink }}</label><input required="" placeholder="https://..." style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                  <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 20px;border-radius:999px;font-weight:600;font-size:15px;border:2px solid var(--blue);background:var(--blue);color:var(--on);cursor:pointer;box-shadow:0 6px 18px rgba(30,58,138,.18);transition:all .15s ease;" style-hover="background:var(--blueh);transform:translateY(-2px);"><i data-lucide="send" style="width:17px;height:17px;"></i>{{ t.pubJobBtn }}</button>
+                </form>
+              </sc-if>
+            </div>
+            </sc-if>
+            <sc-if value="{{ isOrgTab }}" hint-placeholder-val="{{ false }}">
+            <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:clamp(22px,3vw,30px);box-shadow:0 12px 32px var(--sh);">
+              <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:0 0 6px;">{{ t.pubOrgT }}</h2>
+              <p style="color:var(--txm);font-size:14px;line-height:1.55;margin:0 0 22px;">{{ t.pubOrgSub }}</p>
+              <sc-if value="{{ sentOrg }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;gap:13px;align-items:flex-start;background:var(--grns);border:1px solid var(--grn);border-radius:14px;padding:20px;"><i data-lucide="circle-check-big" style="width:24px;height:24px;color:var(--grn);flex:0 0 auto;margin-top:1px;"></i><div><strong style="display:block;color:var(--grn);font-size:15.5px;margin-bottom:3px;">{{ t.pubOrgSentT }}</strong><span style="color:var(--txs);font-size:14px;line-height:1.55;">{{ t.pubOrgSentX }}</span></div></div>
+              </sc-if>
+              <sc-if value="{{ notSentOrg }}" hint-placeholder-val="{{ true }}">
+                <form onSubmit="{{ submitOrg }}">
+                  <div style="display:grid;gap:16px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));margin-bottom:16px;">
+                    <div><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lOrgNombre }}</label><input required="" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                    <div><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lOrgTipo }}</label><input required="" placeholder="{{ t.phOrgTipo }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                  </div>
+                  <div style="margin-bottom:16px;"><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lOrgAreas }}</label><input required="" placeholder="{{ t.phOrgAreas }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                  <div style="margin-bottom:22px;"><label style="display:block;font-weight:600;font-size:13.5px;margin-bottom:6px;color:var(--txt);">{{ t.lOrgContacto }}</label><input required="" placeholder="{{ t.phOrgContacto }}" style="width:100%;padding:12px 14px;border:1.5px solid var(--bd2);border-radius:12px;font:inherit;font-size:14.5px;background:var(--bg);color:var(--txt);" style-focus="outline:none;border-color:var(--acc);background:var(--srf);"></div>
+                  <button type="submit" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 20px;border-radius:999px;font-weight:600;font-size:15px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);cursor:pointer;box-shadow:0 6px 18px rgba(252,209,22,.3);transition:all .15s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);transform:translateY(-2px);"><i data-lucide="handshake" style="width:17px;height:17px;"></i>{{ t.pubOrgBtn }}</button>
+                </form>
+              </sc-if>
+            </div>
+            </sc-if>
+          </div>
+          <aside style="flex:1 1 290px;max-width:360px;position:sticky;top:90px;">
+            <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 12px 32px var(--sh);">
+              <h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:0 0 18px;">{{ t.curamosT }}</h3>
+              <ol style="list-style:none;padding:0;margin:0;display:grid;gap:16px;">
+                <li style="display:flex;gap:13px;align-items:flex-start;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:0 0 auto;">1</span><span style="font-size:14px;color:var(--txs);line-height:1.5;">{{ t.cur1 }}</span></li>
+                <li style="display:flex;gap:13px;align-items:flex-start;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:0 0 auto;">2</span><span style="font-size:14px;color:var(--txs);line-height:1.5;">{{ t.cur2 }}</span></li>
+                <li style="display:flex;gap:13px;align-items:flex-start;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:0 0 auto;">3</span><span style="font-size:14px;color:var(--txs);line-height:1.5;">{{ t.cur3 }}</span></li>
+                <li style="display:flex;gap:13px;align-items:flex-start;"><span style="display:inline-flex;width:28px;height:28px;border-radius:50%;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:0 0 auto;">4</span><span style="font-size:14px;color:var(--txs);line-height:1.5;">{{ t.cur4 }}</span></li>
+              </ol>
+              <div style="display:flex;gap:12px;background:var(--accs);border:1px solid var(--accbd);border-radius:13px;padding:14px 16px;margin-top:20px;">
+                <i data-lucide="lock" style="width:19px;height:19px;color:var(--acc);flex:0 0 auto;margin-top:1px;"></i>
+                <p style="margin:0;font-size:13px;line-height:1.55;color:var(--txt);"><strong style="display:block;margin-bottom:2px;color:var(--acc);">{{ t.sinBackT }}</strong>{{ t.sinBackX }}</p>
+              </div>
+              <p style="margin:16px 0 0;font-size:13px;color:var(--txm);">{{ t.escribeDirecto }} <a href="mailto:oportunidades@dondeayudar.example" style="color:var(--acc);font-weight:600;" style-hover="text-decoration:underline;">oportunidades@dondeayudar.example</a></p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+  <sc-if value="{{ isCasoDetail }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Caso detalle">
+    <section style="padding:clamp(26px,4vw,40px) 0 clamp(56px,8vw,88px);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <a onClick="{{ goCasos }}" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--acc);font-weight:600;cursor:pointer;margin-bottom:20px;" style-hover="gap:9px;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i>{{ t.volverCasos }}</a>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+          <span style="{{ activeCaso.badge.style }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>{{ activeCaso.badge.label }}</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;background:var(--srf2);color:var(--txs);border:1px solid var(--bd2);"><i data-lucide="map-pin" style="width:13px;height:13px;"></i>{{ activeCaso.location }}</span>
+        </div>
+        <h1 style="font-size:clamp(28px,3.6vw,42px);line-height:1.12;font-weight:800;letter-spacing:-.02em;color:var(--acc);margin:0 0 14px;max-width:24ch;">{{ activeCaso.title }}</h1>
+        <p style="font-size:clamp(16px,1.5vw,19px);line-height:1.6;color:var(--txs);max-width:64ch;margin:0;">{{ activeCaso.summary }}</p>
+        <div style="margin:28px 0 36px;background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 10px 30px var(--sh);display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));">
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="display:inline-flex;width:40px;height:40px;border-radius:11px;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="shield-check" style="width:20px;height:20px;"></i></span><div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.cdEstado }}</span><span style="display:block;font-weight:700;color:var(--txt);font-size:15px;margin-top:2px;">{{ activeCaso.statusLabel }}</span></div></div>
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="display:inline-flex;width:40px;height:40px;border-radius:11px;background:var(--yels);color:var(--yelink);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="map-pin" style="width:20px;height:20px;"></i></span><div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.cdUbicacion }}</span><span style="display:block;font-weight:700;color:var(--txt);font-size:15px;margin-top:2px;">{{ activeCaso.location }}</span></div></div>
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="display:inline-flex;width:40px;height:40px;border-radius:11px;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="badge-check" style="width:20px;height:20px;"></i></span><div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.verificadoPor }}</span><span style="display:block;font-weight:700;color:var(--txt);font-size:15px;margin-top:2px;">{{ activeCaso.verifiedBy }}</span></div></div>
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="display:inline-flex;width:40px;height:40px;border-radius:11px;background:var(--srf2);color:var(--txs);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="calendar-days" style="width:20px;height:20px;"></i></span><div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.cdActualizacion }}</span><span style="display:block;font-weight:700;color:var(--txt);font-size:15px;margin-top:2px;">{{ activeCaso.dateLabel }}</span></div></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start;">
+          <div style="flex:1 1 430px;min-width:0;">
+            <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:0 0 12px;">{{ t.cdResumen }}</h2>
+            <sc-for list="{{ activeCaso.bodyBlocks }}" as="b" hint-placeholder-count="2">
+              <sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p style="font-size:15.5px;line-height:1.7;color:var(--txs);margin:0 0 14px;">{{ b.text }}</p></sc-if>
+              <sc-if value="{{ b.isQuote }}" hint-placeholder-val="{{ false }}"><blockquote style="margin:6px 0 16px;padding:14px 18px;background:var(--reds);border-left:4px solid var(--red);border-radius:12px;color:var(--red);font-weight:600;font-size:15px;line-height:1.55;">{{ b.text }}</blockquote></sc-if>
+            </sc-for>
+            <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:28px 0 12px;">{{ t.cdNecesidades }}</h2>
+            <ul style="list-style:none;display:flex;flex-wrap:wrap;gap:9px;padding:0;margin:0;">
+              <sc-for list="{{ activeCaso.needsList }}" as="n" hint-placeholder-count="3"><li style="display:inline-flex;align-items:center;gap:7px;background:var(--srf);border:1px solid var(--bd);border-radius:12px;padding:9px 14px;font-size:14px;color:var(--txt);font-weight:500;"><i data-lucide="circle-dot" style="width:14px;height:14px;color:var(--acc);"></i>{{ n.text }}</li></sc-for>
+            </ul>
+            <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:28px 0 12px;">{{ t.cdHabilidades }}</h2>
+            <ul style="list-style:none;display:flex;flex-wrap:wrap;gap:9px;padding:0;margin:0;">
+              <sc-for list="{{ activeCaso.skillsList }}" as="s" hint-placeholder-count="3"><li style="display:inline-flex;background:var(--accs);border:1px solid var(--accbd);border-radius:999px;padding:7px 14px;font-size:13.5px;color:var(--acc);font-weight:600;">{{ s.text }}</li></sc-for>
+            </ul>
+            <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:28px 0 12px;">{{ t.cdDisp }}</h2>
+            <p style="font-size:15.5px;line-height:1.7;color:var(--txs);margin:0;">{{ activeCaso.remoteWorkAvailability }}</p>
+
+            <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:30px 0 6px;">{{ t.formasT }}</h2>
+            <sc-if value="{{ activeCaso.showMethods }}" hint-placeholder-val="{{ true }}">
+              <p style="font-size:14.5px;line-height:1.6;color:var(--txs);margin:0 0 16px;">{{ t.formasSub }}</p>
+              <div style="display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));">
+                <sc-for list="{{ activeCaso.methods }}" as="m" hint-placeholder-count="2">
+                  <div style="background:var(--srf);border:1px solid var(--bd);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:11px;box-shadow:0 8px 24px var(--sh);">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+                      <span style="display:inline-flex;align-items:center;gap:9px;"><span style="display:inline-flex;width:38px;height:38px;border-radius:11px;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;"><i data-lucide="{{ m.icon }}" style="width:19px;height:19px;"></i></span><span style="font-weight:700;font-size:15px;color:var(--txt);">{{ m.label }}</span></span>
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:999px;font-size:10px;font-weight:700;background:var(--accs);color:var(--acc);white-space:nowrap;"><i data-lucide="shield-check" style="width:12px;height:12px;"></i>{{ activeCaso.verifiedBy }}</span>
+                    </div>
+                    <div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10px;color:var(--txm);font-weight:700;">{{ t.dmHolder }}</span><span style="display:block;font-weight:600;font-size:14px;color:var(--txt);">{{ m.holder }}</span></div>
+                    <div style="font-family:ui-monospace,'SF Mono',Menlo,monospace;font-size:13px;color:var(--txt);background:var(--soft);border:1px solid var(--bd);border-radius:10px;padding:9px 11px;word-break:break-word;line-height:1.5;">{{ m.display }}</div>
+                    <span style="font-size:12.5px;color:var(--txm);line-height:1.4;">{{ m.note }}</span>
+                    <button onClick="{{ m.onCopy }}" style="display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 16px;border-radius:999px;font-weight:600;font-size:13.5px;border:2px solid var(--blue);background:var(--blue);color:var(--on);cursor:pointer;transition:all .15s ease;" style-hover="background:var(--blueh);transform:translateY(-1px);"><i data-lucide="copy" style="width:15px;height:15px;"></i>{{ m.copyLabel }}</button>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:13px;background:var(--yels);border:1px solid var(--yelbd);border-left:4px solid var(--yelh);border-radius:14px;padding:16px 18px;margin-top:18px;">
+                <i data-lucide="shield-alert" style="width:21px;height:21px;color:var(--yelink);flex:0 0 auto;margin-top:1px;"></i>
+                <p style="margin:0;font-size:13.5px;line-height:1.55;color:var(--yelink);">{{ t.formasDisc }}</p>
+              </div>
+            </sc-if>
+            <sc-if value="{{ activeCaso.showDonPending }}" hint-placeholder-val="{{ false }}">
+              <p style="font-size:14.5px;line-height:1.6;color:var(--txm);background:var(--soft);border:1px solid var(--bd);border-radius:14px;padding:16px 18px;margin:6px 0 0;display:flex;gap:10px;align-items:flex-start;"><i data-lucide="clock" style="width:19px;height:19px;color:var(--txm);flex:0 0 auto;margin-top:1px;"></i>{{ t.formasPending }}</p>
+            </sc-if>
+            <sc-if value="{{ activeCaso.showDonEmpty }}" hint-placeholder-val="{{ false }}">
+              <p style="font-size:14.5px;line-height:1.6;color:var(--txm);background:var(--soft);border:1px solid var(--bd);border-radius:14px;padding:16px 18px;margin:6px 0 0;">{{ t.formasEmpty }}</p>
+            </sc-if>
+            <div style="display:flex;gap:13px;background:var(--accs);border:1px solid var(--accbd);border-left:4px solid var(--acc);border-radius:14px;padding:16px 18px;margin-top:26px;">
+              <i data-lucide="lock" style="width:21px;height:21px;color:var(--acc);flex:0 0 auto;margin-top:1px;"></i>
+              <p style="margin:0;font-size:13.5px;line-height:1.55;color:var(--txt);"><strong style="display:block;margin-bottom:2px;color:var(--acc);">{{ t.cdNotaT }}</strong>{{ t.cdNotaX }}</p>
+            </div>
+          </div>
+          <aside style="flex:1 1 290px;max-width:360px;position:sticky;top:90px;">
+            <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 12px 32px var(--sh);">
+              <h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:0 0 16px;">{{ t.cdComoApoyar }}</h3>
+              <div style="display:flex;flex-direction:column;gap:4px;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--bd);">
+                <span style="text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.cdContactoSeguro }}</span>
+                <span style="font-size:14px;color:var(--txt);font-weight:500;line-height:1.5;">{{ activeCaso.contactMethod }}</span>
+              </div>
+              <sc-if value="{{ activeCaso.hasSupport }}" hint-placeholder-val="{{ true }}">
+                <a href="{{ activeCaso.supportLink }}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:13px 18px;border-radius:999px;font-weight:600;font-size:15px;border:2px solid var(--blue);background:var(--blue);color:var(--on);cursor:pointer;box-shadow:0 6px 18px rgba(30,58,138,.18);transition:all .15s ease;" style-hover="background:var(--blueh);transform:translateY(-2px);">{{ t.cdApoyar }}<i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i></a>
+              </sc-if>
+              <sc-if value="{{ activeCaso.noSupport }}" hint-placeholder-val="{{ false }}">
+                <p style="margin:0;font-size:13.5px;line-height:1.55;color:var(--txm);background:var(--soft);border:1px solid var(--bd);border-radius:12px;padding:13px 15px;">{{ t.cdNoSupport }}</p>
+              </sc-if>
+              <button onClick="{{ activeCaso.onRecruiter }}" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:11px;padding:13px 18px;border-radius:999px;font-weight:600;font-size:14.5px;border:2px solid var(--ghostbd);background:var(--srf);color:var(--acc);cursor:pointer;transition:all .15s ease;" style-hover="background:var(--accs);border-color:var(--acc);"><i data-lucide="briefcase" style="width:16px;height:16px;"></i>{{ t.cdRecruiter }}</button>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+  <sc-if value="{{ isEmpleoDetail }}" hint-placeholder-val="{{ false }}">
+  <div data-screen-label="Empleo detalle">
+    <section style="padding:clamp(26px,4vw,40px) 0 clamp(56px,8vw,88px);">
+      <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+        <a onClick="{{ goEmpleos }}" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;color:var(--acc);font-weight:600;cursor:pointer;margin-bottom:20px;" style-hover="gap:9px;"><i data-lucide="arrow-left" style="width:16px;height:16px;"></i>{{ t.volverEmpleos }}</a>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;">
+          <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;background:var(--srf2);color:var(--txs);border:1px solid var(--bd2);"><i data-lucide="tag" style="width:13px;height:13px;"></i>{{ activeEmpleo.category }}</span>
+          <span style="{{ activeEmpleo.badge.style }}"><span style="width:6px;height:6px;border-radius:50%;background:currentColor;"></span>{{ activeEmpleo.badge.label }}</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;color:var(--grn);font-size:12px;font-weight:600;padding:5px 0;"><i data-lucide="badge-check" style="width:14px;height:14px;"></i>{{ activeEmpleo.verifiedLabel }}</span>
+        </div>
+        <h1 style="font-size:clamp(28px,3.6vw,42px);line-height:1.12;font-weight:800;letter-spacing:-.02em;color:var(--acc);margin:0 0 12px;max-width:26ch;">{{ activeEmpleo.title }}</h1>
+        <p style="display:inline-flex;align-items:center;gap:8px;font-size:clamp(16px,1.5vw,19px);color:var(--txs);margin:0;"><i data-lucide="building-2" style="width:19px;height:19px;color:var(--txm);"></i><strong style="color:var(--txt);font-weight:600;">{{ activeEmpleo.company }}</strong></p>
+        <div style="margin:28px 0 36px;background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 10px 30px var(--sh);display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));">
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="display:inline-flex;width:40px;height:40px;border-radius:11px;background:var(--accs);color:var(--acc);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="building-2" style="width:20px;height:20px;"></i></span><div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.edEmpresa }}</span><span style="display:block;font-weight:700;color:var(--txt);font-size:15px;margin-top:2px;">{{ activeEmpleo.company }}</span></div></div>
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="display:inline-flex;width:40px;height:40px;border-radius:11px;background:var(--yels);color:var(--yelink);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="map-pin" style="width:20px;height:20px;"></i></span><div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.edModalidad }}</span><span style="display:block;font-weight:700;color:var(--txt);font-size:15px;margin-top:2px;">{{ activeEmpleo.place }}</span></div></div>
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="display:inline-flex;width:40px;height:40px;border-radius:11px;background:var(--grns);color:var(--grn);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="layout-grid" style="width:20px;height:20px;"></i></span><div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.edCategoria }}</span><span style="display:block;font-weight:700;color:var(--txt);font-size:15px;margin-top:2px;">{{ activeEmpleo.category }}</span></div></div>
+          <div style="display:flex;gap:12px;align-items:flex-start;"><span style="display:inline-flex;width:40px;height:40px;border-radius:11px;background:var(--srf2);color:var(--txs);align-items:center;justify-content:center;flex:0 0 auto;"><i data-lucide="calendar-days" style="width:20px;height:20px;"></i></span><div><span style="display:block;text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.edPublicado }}</span><span style="display:block;font-weight:700;color:var(--txt);font-size:15px;margin-top:2px;">{{ activeEmpleo.dateLabel }}</span></div></div>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:34px;align-items:flex-start;">
+          <div style="flex:1 1 430px;min-width:0;">
+            <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:0 0 12px;">{{ t.edDescripcion }}</h2>
+            <p style="font-size:15.5px;line-height:1.7;color:var(--txs);margin:0 0 14px;">{{ activeEmpleo.description }}</p>
+            <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:28px 0 12px;">{{ t.edRequisitos }}</h2>
+            <ul style="list-style:none;display:grid;gap:9px;padding:0;margin:0;">
+              <sc-for list="{{ activeEmpleo.reqsList }}" as="r" hint-placeholder-count="4"><li style="display:flex;align-items:flex-start;gap:9px;font-size:15px;color:var(--txs);line-height:1.55;"><i data-lucide="check" style="width:18px;height:18px;color:var(--grn);flex:0 0 auto;margin-top:1px;"></i>{{ r.text }}</li></sc-for>
+            </ul>
+            <h2 style="font-size:21px;font-weight:700;color:var(--acc);margin:28px 0 12px;">{{ t.edDetalles }}</h2>
+            <sc-for list="{{ activeEmpleo.bodyBlocks }}" as="b" hint-placeholder-count="2">
+              <sc-if value="{{ b.isP }}" hint-placeholder-val="{{ true }}"><p style="font-size:15.5px;line-height:1.7;color:var(--txs);margin:0 0 14px;">{{ b.text }}</p></sc-if>
+              <sc-if value="{{ b.isH }}" hint-placeholder-val="{{ false }}"><h4 style="font-size:16px;font-weight:700;color:var(--txt);margin:18px 0 8px;">{{ b.text }}</h4></sc-if>
+              <sc-if value="{{ b.isUl }}" hint-placeholder-val="{{ false }}"><ul style="list-style:none;display:grid;gap:8px;padding:0;margin:0 0 14px;"><sc-for list="{{ b.items }}" as="it" hint-placeholder-count="3"><li style="display:flex;align-items:flex-start;gap:9px;font-size:15px;color:var(--txs);line-height:1.55;"><i data-lucide="dot" style="width:18px;height:18px;color:var(--acc);flex:0 0 auto;margin-top:1px;"></i>{{ it.text }}</li></sc-for></ul></sc-if>
+            </sc-for>
+            <div style="display: flex; gap: 13px; background: var(--yels); border: 1px solid var(--yelbd); border-left: 4px solid var(--yelh); border-radius: 14px; padding: 16px 18px; margin-top: 22px; overflow: visible; border-color: #ffffffeb">
+              <i data-lucide="triangle-alert" style="width:21px;height:21px;color:var(--yelink);flex:0 0 auto;margin-top:1px;"></i>
+              <p style="margin:0;font-size:13.5px;line-height:1.55;color:var(--yelink);"><strong style="display:block;margin-bottom:2px;color:var(--yelink);">{{ t.edAntesT }}</strong>{{ t.edAntesX }}</p>
+            </div>
+          </div>
+          <aside style="flex:1 1 290px;max-width:360px;position:sticky;top:90px;">
+            <div style="background:var(--srf);border:1px solid var(--bd);border-radius:20px;padding:24px;box-shadow:0 12px 32px var(--sh);">
+              <h3 style="font-size:18px;font-weight:700;color:var(--acc);margin:0 0 16px;">{{ t.edAplicar }}</h3>
+              <div style="display:flex;flex-direction:column;gap:4px;padding-bottom:14px;margin-bottom:16px;border-bottom:1px solid var(--bd);">
+                <span style="text-transform:uppercase;letter-spacing:.06em;font-size:10.5px;color:var(--txm);font-weight:700;">{{ t.edFuente }}</span>
+                <span style="font-size:13.5px;color:var(--txt);font-weight:500;line-height:1.5;">{{ activeEmpleo.source }}</span>
+              </div>
+              <a href="{{ activeEmpleo.applyUrl }}" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px 18px;border-radius:999px;font-weight:600;font-size:15px;border:2px solid var(--yel);background:var(--yel);color:var(--inkyel);cursor:pointer;box-shadow:0 6px 18px rgba(252,209,22,.3);transition:all .15s ease;" style-hover="background:var(--yelh);border-color:var(--yelh);transform:translateY(-2px);">{{ t.edAplicarBtn }}<i data-lucide="arrow-up-right" style="width:16px;height:16px;"></i></a>
+              <div style="display:flex;align-items:flex-start;gap:9px;margin-top:14px;padding-top:14px;border-top:1px solid var(--bd);color:var(--grn);font-size:13px;font-weight:600;"><i data-lucide="badge-check" style="width:16px;height:16px;flex:0 0 auto;margin-top:1px;"></i>{{ t.edVerif }}</div>
+              <ul style="list-style:none;display:flex;flex-wrap:wrap;gap:7px;padding:0;margin:14px 0 0;">
+                <sc-for list="{{ activeEmpleo.tagsList }}" as="tg" hint-placeholder-count="3"><li style="display:inline-flex;background:var(--soft);border:1px solid var(--bd);border-radius:999px;padding:5px 11px;font-size:12.5px;color:var(--txs);">{{ tg.text }}</li></sc-for>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </div>
+  </sc-if>
+
+
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer data-screen-label="Footer" style="background:var(--band);color:rgba(255,255,255,.82);padding:clamp(40px,6vw,56px) 0 28px;">
+    <div style="max-width:1140px;margin:0 auto;padding:0 24px;">
+      <div style="display:grid;gap:36px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+        <div style="max-width:38ch;">
+          <span style="display:inline-flex;align-items:center;gap:10px;margin-bottom:14px;"><span style="width:42px;height:42px;border-radius:12px;background:#ffffff;display:inline-flex;align-items:center;justify-content:center;"><img src="assets/logo-icon.png" alt="" style="width:30px;height:auto;"></span><span style="font-weight:700;font-size:18px;color:#ffffff;">Donde Ayudar</span></span>
+          <p style="color:#ffffff;font-weight:600;margin:0 0 8px;font-size:15px;">{{ t.footTag }}</p>
+          <p style="color:rgba(255,255,255,.7);margin:0;font-size:13.5px;line-height:1.6;">{{ t.footMsg }}</p>
+        </div>
+        <div>
+          <h4 style="color:#ffffff;font-size:14px;font-weight:600;margin:0 0 14px;text-transform:uppercase;letter-spacing:.08em;">{{ t.footExplorar }}</h4>
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:14.5px;">
+            <li><a onClick="{{ goCasos }}" style="color:rgba(255,255,255,.85);cursor:pointer;" style-hover="color:var(--yel);">{{ t.navCasos }}</a></li>
+            <li><a onClick="{{ goEmpleos }}" style="color:rgba(255,255,255,.85);cursor:pointer;" style-hover="color:var(--yel);">{{ t.navEmpleos }}</a></li>
+            <li><a onClick="{{ goOrgs }}" style="color:rgba(255,255,255,.85);cursor:pointer;" style-hover="color:var(--yel);">{{ t.navOrgs }}</a></li>
+            <li><a onClick="{{ goComo }}" style="color:rgba(255,255,255,.85);cursor:pointer;" style-hover="color:var(--yel);">{{ t.navComo }}</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 style="color:#ffffff;font-size:14px;font-weight:600;margin:0 0 14px;text-transform:uppercase;letter-spacing:.08em;">{{ t.footParticipar }}</h4>
+          <ul style="list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:14.5px;">
+            <li><a onClick="{{ goPublicar }}" style="color:rgba(255,255,255,.85);cursor:pointer;" style-hover="color:var(--yel);">{{ t.footPublicar }}</a></li>
+            <li><a onClick="{{ goPublicar }}" style="color:rgba(255,255,255,.85);cursor:pointer;" style-hover="color:var(--yel);">{{ t.footConectar }}</a></li>
+            <li><a href="mailto:hola@dondeayudar.example" style="color:rgba(255,255,255,.85);" style-hover="color:var(--yel);">{{ t.footContacto }}</a></li>
+          </ul>
+        </div>
+      </div>
+      <div style="border-top:1px solid rgba(255,255,255,.18);margin-top:34px;padding-top:20px;">
+        <p style="margin:0;font-size:13px;color:rgba(255,255,255,.72);line-height:1.6;max-width:80ch;">{{ t.footLegal }}</p>
+        <p style="margin:8px 0 0;font-size:12.5px;color:rgba(255,255,255,.55);">{{ t.footCopy }}</p>
+      </div>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    page: 'home', slug: null,
+    casoFilter: 'todos', empleoFilter: 'todas',
+    menuOpen: false,
+    vw: (typeof window !== 'undefined' ? window.innerWidth : 1200),
+    sentJob: false, sentOrg: false, pubTab: 'job', regRole: 'recruiter', sentReg: false, copiedKey: null,
+    lang: (function(){ try { return localStorage.getItem('da-lang') || 'es'; } catch(e){ return 'es'; } })(),
+    theme: 'light',
+  };
+
+  componentDidMount() {
+    this._applyTheme();
+    this._refreshIcons();
+    if (!window.DA) this._waitDA(0);
+    this._onResize = () => {
+      if (this._raf) cancelAnimationFrame(this._raf);
+      this._raf = requestAnimationFrame(() => this.setState({ vw: window.innerWidth }));
+    };
+    window.addEventListener('resize', this._onResize);
+  }
+  componentWillUnmount() { if (this._onResize) window.removeEventListener('resize', this._onResize); }
+  componentDidUpdate() { this._applyTheme(); this._refreshIcons(); }
+  _applyTheme() { try { document.documentElement.setAttribute('data-theme', 'light'); localStorage.setItem('da-theme', 'light'); } catch (e) {} }
+  _waitDA(tries) { if (window.DA) { this.forceUpdate(); } else if (tries < 60) { setTimeout(() => this._waitDA(tries + 1), 100); } }
+  _refreshIcons(tries) {
+    tries = tries || 0;
+    if (typeof window !== 'undefined' && window.lucide && window.lucide.createIcons) {
+      try { window.lucide.createIcons(); } catch (e) {}
+    } else if (tries < 25) { setTimeout(() => this._refreshIcons(tries + 1), 120); }
+  }
+
+  go(page, slug) {
+    this.setState({ page: page, slug: slug || null, menuOpen: false });
+    try { requestAnimationFrame(() => { window.scrollTo(0, 0); if (document.scrollingElement) document.scrollingElement.scrollTop = 0; }); } catch (e) {}
+  }
+  toggleMenu() { this.setState(s => ({ menuOpen: !s.menuOpen })); }
+  toggleLang() { this.setState(s => { const lg = s.lang === 'es' ? 'en' : 'es'; try { localStorage.setItem('da-lang', lg); } catch (e) {} return { lang: lg }; }); }
+  toggleTheme() { this.setState(s => { const th = s.theme === 'dark' ? 'light' : 'dark'; try { localStorage.setItem('da-theme', th); } catch (e) {} return { theme: th }; }); }
+  copyMethod(key, text) { try { const p = navigator.clipboard && navigator.clipboard.writeText(text); if (p && p.catch) p.catch(() => this._fallbackCopy(text)); else this._fallbackCopy(text); } catch (e) { this._fallbackCopy(text); } this.setState({ copiedKey: key }); clearTimeout(this._copyT); this._copyT = setTimeout(() => this.setState({ copiedKey: null }), 1600); }
+  _fallbackCopy(text) { try { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); } catch (e) {} }
+  _donIcon(tp) { return { zelle: 'send', paypal: 'wallet', bank_of_america: 'landmark', pago_movil: 'smartphone' }[tp] || 'hand-coins'; }
+
+  _badgeStyle(k) {
+    const bg = { verified: 'var(--accs)', urgent: 'var(--reds)', pending: 'var(--srf2)', neutral: 'var(--srf2)', remoto: 'var(--yels)', presencial: 'var(--accs)', hibrido: 'var(--srf2)', ally: 'var(--blue)' };
+    const fg = { verified: 'var(--acc)', urgent: 'var(--red)', pending: 'var(--txs)', neutral: 'var(--txs)', remoto: 'var(--yelink)', presencial: 'var(--acc)', hibrido: 'var(--txs)', ally: 'var(--on)' };
+    const bd = { verified: 'var(--accbd)', urgent: 'var(--redbd)', pending: 'var(--bd2)', neutral: 'var(--bd2)', remoto: 'var(--yelbd)', presencial: 'var(--accbd)', hibrido: 'var(--bd2)', ally: 'var(--blue)' };
+    return 'display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600;letter-spacing:.01em;background:' + bg[k] + ';color:' + fg[k] + ';border:1px solid ' + bd[k] + ';white-space:nowrap;';
+  }
+  _chipStyle(active) {
+    return 'display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:999px;font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid ' + (active ? 'var(--blue)' : 'var(--bd2)') + ';background:' + (active ? 'var(--blue)' : 'var(--srf)') + ';color:' + (active ? 'var(--on)' : 'var(--txt)') + ';transition:all .15s ease;';
+  }
+  _chipCount(active) {
+    return 'display:inline-flex;align-items:center;justify-content:center;min-width:20px;height:20px;padding:0 6px;border-radius:999px;font-size:11px;font-weight:700;background:' + (active ? 'rgba(255,255,255,.22)' : 'var(--srf2)') + ';color:' + (active ? 'var(--on)' : 'var(--txm)') + ';';
+  }
+  _tabStyle(active) {
+    return 'display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:999px;font-size:14.5px;font-weight:600;cursor:pointer;flex:1 1 auto;border:2px solid ' + (active ? 'var(--blue)' : 'var(--bd2)') + ';background:' + (active ? 'var(--blue)' : 'var(--srf)') + ';color:' + (active ? 'var(--on)' : 'var(--txt)') + ';transition:all .15s ease;';
+  }
+  _processBody(blocks) {
+    return (blocks || []).map(b => ({ isP: b.t === 'p', isH: b.t === 'h', isUl: b.t === 'ul', isQuote: b.t === 'quote', text: b.text || '', items: (b.items || []).map(x => ({ text: x })) }));
+  }
+
+  renderVals() {
+    const st = this.state;
+    const L = st.lang;
+    const DA = window.DA || { STRINGS: { es: {}, en: {} }, CASOS: [], EMPLEOS: [], ORGS: [] };
+    const t = (DA.STRINGS && DA.STRINGS[L]) || {};
+    const isMobile = st.vw < 1024;
+    const pk = (o) => (o && typeof o === 'object' && (o.es !== undefined || o.en !== undefined)) ? o[L] : o;
+
+    const statusBadge = (status) => {
+      const k = status === 'verified' ? 'verified' : status === 'urgent' ? 'urgent' : 'pending';
+      const label = status === 'verified' ? t.stVerificado : status === 'urgent' ? t.stUrgente : t.stPendiente;
+      return { label: label, style: this._badgeStyle(k) };
+    };
+    const modeBadge = (mode) => {
+      const map = { remoto: { k: 'remoto', label: t.fRemoto }, presencial: { k: 'presencial', label: t.fPresencial }, hibrido: { k: 'hibrido', label: t.fHibrido } };
+      const m = map[mode] || map.remoto;
+      return { label: m.label, style: this._badgeStyle(m.k) };
+    };
+
+    const casoVM = (c) => ({
+      id: c.id, status: c.status, date: c.date, supportLink: c.supportLink,
+      title: pk(c.title), location: pk(c.location), verifiedBy: pk(c.verifiedBy),
+      summary: pk(c.summary), dateLabel: pk(c.dateLabel),
+      mainNeed: (pk(c.needs) || [])[0],
+      topSkills: (pk(c.skills) || []).slice(0, 3).map(s => ({ text: s })),
+      badge: statusBadge(c.status),
+      hasDonation: c.status !== 'pending' && (c.donationMethods || []).length > 0,
+      ctaLabel: (c.status !== 'pending' && (c.donationMethods || []).length > 0) ? t.verFormas : t.verCaso,
+      onOpen: () => this.go('caso-detail', c.id),
+    });
+    const empleoVM = (e) => {
+      const d = pk(e.description) || '';
+      return {
+        id: e.id, company: e.company, mode: e.mode, date: e.date, applyUrl: e.applyUrl,
+        title: pk(e.title), place: pk(e.place), category: pk(e.category), dateLabel: pk(e.dateLabel),
+        shortDesc: d.length > 120 ? d.slice(0, 120) + '…' : d,
+        topTags: (pk(e.tags) || []).slice(0, 4).map(x => ({ text: x })),
+        badge: modeBadge(e.mode), verifiedLabel: t.ofertaVerificada,
+        onOpen: () => this.go('empleo-detail', e.id),
+      };
+    };
+    const orgVM = (o) => {
+      const isEmail = o.contact.indexOf('@') !== -1 && o.contact.indexOf('http') !== 0;
+      return {
+        id: o.id, title: pk(o.title), type: pk(o.type), location: pk(o.location), description: pk(o.description),
+        areasList: (pk(o.areas) || []).map(a => ({ text: a })),
+        typeBadge: { label: pk(o.type), style: this._badgeStyle('neutral') },
+        allyBadge: o.verified ? { label: t.allyLabel, style: this._badgeStyle('ally') } : { label: t.orgPendiente, style: this._badgeStyle('pending') },
+        contactHref: isEmail ? ('mailto:' + o.contact) : o.contact,
+        contactLabel: isEmail ? t.escribir : t.contactar,
+        hasWebsite: !!o.website, website: o.website,
+      };
+    };
+
+    const casosVM = DA.CASOS.map(casoVM);
+    const empleosVM = DA.EMPLEOS.map(empleoVM);
+    const orgsVM = DA.ORGS.map(orgVM);
+
+    const order = { urgent: 0, verified: 1, pending: 2 };
+    const casosSorted = casosVM.slice().sort((a, b) => { const d = order[a.status] - order[b.status]; return d !== 0 ? d : (a.date < b.date ? 1 : -1); });
+    const empleosSorted = empleosVM.slice().sort((a, b) => (a.date < b.date ? 1 : -1));
+
+    const cf = st.casoFilter;
+    const casoFilterDefs = [
+      { key: 'todos', label: t.fTodos }, { key: 'verified', label: t.fVerificados },
+      { key: 'urgent', label: t.fUrgentes }, { key: 'pending', label: t.fPendientes },
+      { key: 'donacion', label: t.fConDonacion },
+    ].map(f => {
+      const count = f.key === 'todos' ? casosVM.length : (f.key === 'donacion' ? casosVM.filter(c => c.hasDonation).length : casosVM.filter(c => c.status === f.key).length);
+      const active = cf === f.key;
+      return { label: f.label, count: count, onClick: () => this.setState({ casoFilter: f.key }), style: this._chipStyle(active), countStyle: this._chipCount(active) };
+    });
+    const casosFiltered = cf === 'todos' ? casosSorted : (cf === 'donacion' ? casosSorted.filter(c => c.hasDonation) : casosSorted.filter(c => c.status === cf));
+
+    const ef = st.empleoFilter;
+    const empleoFilterDefs = [
+      { key: 'todas', label: t.fTodas }, { key: 'remoto', label: t.fRemoto },
+      { key: 'presencial', label: t.fPresencial }, { key: 'hibrido', label: t.fHibrido },
+    ].map(f => {
+      const count = f.key === 'todas' ? empleosVM.length : empleosVM.filter(e => e.mode === f.key).length;
+      const active = ef === f.key;
+      return { label: f.label, count: count, onClick: () => this.setState({ empleoFilter: f.key }), style: this._chipStyle(active), countStyle: this._chipCount(active) };
+    });
+    const empleosFiltered = ef === 'todas' ? empleosSorted : empleosSorted.filter(e => e.mode === ef);
+
+    const acRaw = DA.CASOS.find(c => c.id === st.slug);
+    const activeCaso = acRaw ? Object.assign({}, casoVM(acRaw), {
+      needsList: (pk(acRaw.needs) || []).map(n => ({ text: n })),
+      skillsList: (pk(acRaw.skills) || []).map(s => ({ text: s })),
+      remoteWorkAvailability: pk(acRaw.remoteWorkAvailability),
+      contactMethod: pk(acRaw.contactMethod),
+      bodyBlocks: this._processBody(pk(acRaw.body)),
+      statusLabel: statusBadge(acRaw.status).label,
+      hasSupport: !!acRaw.supportLink, noSupport: !acRaw.supportLink,
+      methods: (acRaw.donationMethods || []).map((m, i) => {
+        let display = m.value || '';
+        if (m.type === 'pago_movil') display = [m.bank, m.phone, m.idNumber].filter(Boolean).join(' · ');
+        const ct = m.value || m.phone || display;
+        const key = acRaw.id + '-' + i;
+        return { icon: this._donIcon(m.type), label: m.label, holder: m.holder, display: display, note: pk(m.note), copyLabel: (st.copiedKey === key) ? t.copiedMsg : t.copyBtn, onCopy: () => this.copyMethod(key, ct) };
+      }),
+      showMethods: acRaw.status !== 'pending' && (acRaw.donationMethods || []).length > 0,
+      showDonPending: acRaw.status === 'pending',
+      showDonEmpty: acRaw.status !== 'pending' && (acRaw.donationMethods || []).length === 0,
+      onRecruiter: () => this.go('empleos'),
+    }) : null;
+
+    const aeRaw = DA.EMPLEOS.find(e => e.id === st.slug);
+    const activeEmpleo = aeRaw ? Object.assign({}, empleoVM(aeRaw), {
+      description: pk(aeRaw.description),
+      reqsList: (pk(aeRaw.requirements) || []).map(r => ({ text: r })),
+      bodyBlocks: this._processBody(pk(aeRaw.body)),
+      tagsList: (pk(aeRaw.tags) || []).map(x => ({ text: x })),
+      source: pk(aeRaw.source),
+    }) : null;
+
+    return {
+      t: t, lang: L, langOther: L === 'es' ? 'EN' : 'ES', langSwitch: t.langSwitch,
+      isDark: st.theme === 'dark', isLight: st.theme !== 'dark',
+      themeTitle: st.theme === 'dark' ? t.themeLight : t.themeDark,
+      toggleLang: () => this.toggleLang(), toggleTheme: () => this.toggleTheme(),
+
+      isMobile: isMobile, showDesktopNav: !isMobile, showMobileNav: isMobile,
+      menuOpen: st.menuOpen, menuClosed: isMobile && !st.menuOpen, mobileDrawerOpen: isMobile && st.menuOpen,
+      toggleMenu: () => this.toggleMenu(),
+      goHome: () => this.go('home'), goCasos: () => this.go('casos'), goEmpleos: () => this.go('empleos'),
+      goOrgs: () => this.go('organizaciones'), goComo: () => this.go('como-funciona'), goPublicar: () => this.go('publicar'),
+      casosActive: st.page === 'casos' || st.page === 'caso-detail',
+      empleosActive: st.page === 'empleos' || st.page === 'empleo-detail',
+      orgsActive: st.page === 'organizaciones', comoActive: st.page === 'como-funciona',
+
+      isHome: st.page === 'home', isCasos: st.page === 'casos', isEmpleos: st.page === 'empleos',
+      isOrgs: st.page === 'organizaciones', isComo: st.page === 'como-funciona', isPublicar: st.page === 'publicar',
+      isCasoDetail: st.page === 'caso-detail', isEmpleoDetail: st.page === 'empleo-detail',
+
+      featuredCasos: casosSorted.slice(0, 3), featuredEmpleos: empleosSorted.slice(0, 3),
+      casosFiltered: casosFiltered, empleosFiltered: empleosFiltered, orgs: orgsVM,
+      casoFilterDefs: casoFilterDefs, empleoFilterDefs: empleoFilterDefs,
+      casosEmpty: casosFiltered.length === 0, empleosEmpty: empleosFiltered.length === 0,
+      activeCaso: activeCaso, activeEmpleo: activeEmpleo,
+
+      sentJob: st.sentJob, sentOrg: st.sentOrg, notSentJob: !st.sentJob, notSentOrg: !st.sentOrg,
+      isJobTab: st.pubTab === 'job', isOrgTab: st.pubTab === 'org',
+      onTabJob: () => this.setState({ pubTab: 'job' }), onTabOrg: () => this.setState({ pubTab: 'org' }),
+      tabJobStyle: this._tabStyle(st.pubTab === 'job'), tabOrgStyle: this._tabStyle(st.pubTab === 'org'),
+      isRegistro: st.page === 'registro', goRegistro: () => this.go('registro'), goAyudar: () => this.go('casos'),
+      isRegRecruiter: st.regRole === 'recruiter', isRegOrg: st.regRole === 'org', isRegPersona: st.regRole === 'persona',
+      onRegRecruiter: () => this.setState({ regRole: 'recruiter' }), onRegOrg: () => this.setState({ regRole: 'org' }), onRegPersona: () => this.setState({ regRole: 'persona' }),
+      regTabRecStyle: this._tabStyle(st.regRole === 'recruiter'), regTabOrgStyle: this._tabStyle(st.regRole === 'org'), regTabPersonaStyle: this._tabStyle(st.regRole === 'persona'),
+      sentReg: st.sentReg, notSentReg: !st.sentReg,
+      regGoLabel: st.regRole === 'recruiter' ? t.regGoPublicar : (st.regRole === 'org' ? t.regGoOrg : t.regGoCasos),
+      onRegGo: () => { const r = this.state.regRole; if (r === 'persona') { this.go('casos'); } else { this.setState({ pubTab: r === 'recruiter' ? 'job' : 'org' }); this.go('publicar'); } },
+      submitReg: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ sentReg: true }); },
+      submitJob: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ sentJob: true }); },
+      submitOrg: (e) => { if (e && e.preventDefault) e.preventDefault(); this.setState({ sentOrg: true }); },
+    };
+  }
+}
+</script>
+<script>
+(async () => {
+  if (!document.title || !document.title.trim()) document.title = "Donde Ayudar";
+  // Prepend so page-supplied @page / break rules (deck-stage's margin:0,
+  // author CSS) keep source-order precedence over the baseline.
+  const baseCss = document.createElement('style');
+  baseCss.textContent = "@media print {\n  figure, table { break-inside: avoid; }\n  *, *::before, *::after {\n    print-color-adjust: exact; -webkit-print-color-adjust: exact;\n    backdrop-filter: none !important; -webkit-backdrop-filter: none !important;\n    animation-delay: -99s !important; animation-duration: .001s !important;\n    animation-iteration-count: 1 !important; animation-fill-mode: both !important;\n    animation-play-state: running !important; transition-duration: 0s !important;\n  }\n}";
+  document.head.prepend(baseCss);
+  if (document.readyState === 'loading') {
+    await new Promise((r) => document.addEventListener('DOMContentLoaded', r, { once: true }));
+  }
+  let ds = document.querySelector('deck-stage');
+  // whenDefined never resolves when nothing registers the element, so only
+  // await it when a <deck-stage> tag exists (and race a timeout regardless).
+  if (ds && !customElements.get('deck-stage')) {
+    try {
+      await Promise.race([
+        customElements.whenDefined('deck-stage'),
+        new Promise((r) => setTimeout(r, 3000)),
+      ]);
+    } catch (e) {}
+    ds = document.querySelector('deck-stage');
+  }
+  // dc-runtime assigns window.DCLogic at init and mounts into #dc-root on
+  // DOMContentLoaded; settle on that subtree so React has rendered before
+  // print(). Non-DC pages fall through to weighing body.
+  const isDc = !ds && 'DCLogic' in window;
+  const settleRoot = ds || (isDc ? document.getElementById('dc-root') : null) || document.body;
+  if (settleRoot) {
+    // Weigh only content children — skip script/style/template so inline
+    // Babel/CSS doesn't register as stable "content" before the framework
+    // has mounted anything.
+    const MEDIA = 'img,svg,canvas,video,picture,iframe,embed,object';
+    const weigh = () => {
+      let text = 0, media = 0;
+      for (const c of settleRoot.children) {
+        const t = c.tagName;
+        if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+        text += (c.textContent || '').trim().length;
+        media += c.querySelectorAll(MEDIA).length + (c.matches(MEDIA) ? 1 : 0);
+      }
+      return text + media * 100;
+    };
+    // "Non-zero and stable" alone is not sufficient to mean rendered: generic
+    // body can carry a static shell while async main content is pending, and
+    // #dc-root can carry the root DC's static text while child refs are still
+    // .sc-placeholder boxes. Gate generic on readyState 'complete', and never
+    // accept stability while a dc-runtime placeholder is present.
+    const isGeneric = settleRoot === document.body;
+    const deadline = Date.now() + 15000;
+    let last = -1, stable = 0;
+    while (Date.now() < deadline) {
+      const n = weigh();
+      const ready =
+        (!isGeneric || document.readyState === 'complete') &&
+        !settleRoot.querySelector('.sc-placeholder');
+      if (n > 0 && n === last && ready) { if (++stable >= 2) break; } else { stable = 0; }
+      last = n;
+      await new Promise((r) => setTimeout(r, 250));
+    }
+  }
+  // Project support.js may predate runtime default-seeding; push via bridge.
+  if (isDc && window.__dcSetProps && window.__dcRootName) {
+    try {
+      const dpEl = document.querySelector('script[data-dc-script]');
+      const meta = JSON.parse((dpEl && dpEl.getAttribute('data-props')) || '{}');
+      const bag = {};
+      for (const k in meta)
+        if (k[0] !== '$' && meta[k] && meta[k].default !== undefined)
+          bag[k] = meta[k].default;
+      if (Object.keys(bag).length) {
+        window.__dcSetProps(window.__dcRootName(), bag);
+        await new Promise((r) => setTimeout(r, 50));
+      }
+    } catch (e) {}
+  }
+  // Reveal content gated on scroll or visibility before printing. Lazy <img>,
+  // IntersectionObserver fade-ins, and collapsed <details> don't render while
+  // off-screen, so a long page would print with them blank or closed. Open
+  // every <details>, force native-lazy images eager, and scroll the document
+  // through its full height to trip lazy-load + IO; then wait (bounded) for the
+  // newly-triggered images. Inert for deck-stage (slides aren't scroll-gated).
+  try {
+    for (const d of document.querySelectorAll('details')) d.open = true;
+    for (const img of document.querySelectorAll('img[loading="lazy"]'))
+      img.loading = 'eager';
+    const scroller = document.scrollingElement || document.documentElement;
+    const full = Math.max(scroller.scrollHeight, document.body.scrollHeight);
+    const step = window.innerHeight || 800;
+    for (let y = 0; y <= full; y += step) {
+      window.scrollTo(0, y);
+      await new Promise((r) => requestAnimationFrame(r));
+    }
+    window.scrollTo(0, 0);
+    await Promise.race([
+      Promise.all(
+        [...document.images].map((img) =>
+          img.complete
+            ? null
+            : new Promise((res) => {
+                img.addEventListener('load', res, { once: true });
+                img.addEventListener('error', res, { once: true });
+              })
+        )
+      ),
+      new Promise((r) => setTimeout(r, 4000)),
+    ]);
+  } catch (e) {}
+  try { await document.fonts.ready; } catch (e) {}
+  // Jump every animation to its end state so print() never captures a slide
+  // mid-entrance. Ordering matters: the 0s-transition style must be live
+  // BEFORE data-deck-active is set so attribute-keyed transitions don't
+  // start a (now-0s) run from the pre-active base.
+  const st = document.createElement('style');
+  st.textContent = '*,*::before,*::after{animation-delay:-99s !important;animation-duration:.001s !important;animation-iteration-count:1 !important;animation-fill-mode:both !important;animation-play-state:running !important;transition-duration:0s !important}';
+  document.head.appendChild(st);
+  for (const d of document.querySelectorAll('deck-stage')) {
+    for (const c of d.children) {
+      const t = c.tagName;
+      if (t === 'SCRIPT' || t === 'STYLE' || t === 'TEMPLATE') continue;
+      c.setAttribute('data-deck-active', '');
+    }
+  }
+  // Re-append deck-stage's @page last so no author @page can add a margin and
+  // spill each full-bleed slide onto two sheets. Backstop for old copies.
+  if (ds) {
+    let pg = document.getElementById('deck-stage-print-page');
+    if (!pg) {
+      pg = document.createElement('style');
+      pg.textContent = '@page{size:' + (+ds.getAttribute('width') || 1920) +
+        'px ' + (+ds.getAttribute('height') || 1080) + 'px;margin:0}';
+    }
+    document.body.appendChild(pg);
+  }
+  try {
+    const sweep = () => {
+      for (const a of document.getAnimations()) {
+        try { a.finish(); } catch (e) {
+          try { a.currentTime = (a.effect && a.effect.getComputedTiming().duration) || 0; a.pause(); } catch (e2) {}
+        }
+      }
+    };
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+    sweep();
+    await new Promise((r) => requestAnimationFrame(r));
+  } catch (e) {}
+  // Size the PDF page to the rendered design unless the file opted into
+  // standard paper via @page{size:letter|A4|…}. Decks own their own @page.
+  // Wrappers (body, …) lose padding+margin so the frame sits at (0,0); the
+  // frame itself loses only margin — its padding is INSIDE the measured
+  // rect and must stay, or content shifts and leaves a gap at bottom/right.
+  var __m = null;
+  try { __m = (() => {
+  var docEl = document.documentElement;
+  var doc = { width: docEl.scrollWidth, height: docEl.scrollHeight };
+
+  var ds = document.querySelector('deck-stage');
+  if (ds) {
+    var dw = Number(ds.getAttribute('width')) || 1920;
+    var dh = Number(ds.getAttribute('height')) || 1080;
+    var n = typeof ds.length === 'number' ? ds.length : ds.children.length;
+    var idx = typeof ds.index === 'number' ? ds.index : 0;
+    var frames = [];
+    for (var i = 0; i < n; i++) frames.push({ left: 0, top: 0, width: dw, height: dh });
+    return { kind: 'deck', doc: doc, frames: frames,
+      authored: frames.map(function(){return{width:true,height:true}}),
+      deck: { width: dw, height: dh, slideCount: n, index: idx },
+      signals: { paperPage: false, pxPage: false } };
+  }
+
+  var paperPage = false, pxPage = false;
+  var eachRule = function (fn) {
+    for (var s = 0; s < document.styleSheets.length; s++) {
+      var rs; try { rs = document.styleSheets[s].cssRules; } catch (e) { continue; }
+      for (var r = 0; r < rs.length; r++) {
+        fn(rs[r]);
+        if (rs[r].cssRules) for (var n = 0; n < rs[r].cssRules.length; n++) fn(rs[r].cssRules[n]);
+      }
+    }
+  };
+  eachRule(function (r) {
+    if (r.type !== 6) return;
+    var m = /\bsize\s*:\s*([^;}]+)/i.exec(r.cssText || '');
+    if (!m) return;
+    if (/\b(letter|a[3-5]|legal|ledger)\b/i.test(m[1])) paperPage = true;
+    if (/\d+(?:\.\d+)?px\b/i.test(m[1])) pxPage = true;
+  });
+  var signals = { paperPage: paperPage, pxPage: pxPage };
+
+  var pxVal = function (v) {
+    var m = /^(\d+(?:\.\d+)?)px$/.exec(v || ''); return m ? +m[1] : 0;
+  };
+  var authoredPx = function (el, prop) {
+    if (pxVal(el.style[prop])) return true;
+    var attr = el.getAttribute(prop);
+    if (attr && /^\d+$/.test(attr)) return true;
+    var hit = false;
+    eachRule(function (r) {
+      if (hit || r.type !== 1 || !r.style) return;
+      try { if (el.matches(r.selectorText) && pxVal(r.style[prop])) hit = true; } catch (e) {}
+    });
+    return hit;
+  };
+
+  var el = document.body, rootPxW = false;
+  for (;;) {
+    var kids = [];
+    for (var c = 0; c < el.children.length; c++) {
+      var t = el.children[c].tagName;
+      if (t !== 'SCRIPT' && t !== 'STYLE' && t !== 'TEMPLATE') kids.push(el.children[c]);
+    }
+    if (kids.length !== 1 || !(kids[0] instanceof HTMLElement)) break;
+    el.setAttribute('data-om-frame-wrap', '');
+    el = kids[0];
+    rootPxW = authoredPx(el, 'width');
+    if (rootPxW) break;
+  }
+  if (!rootPxW) rootPxW = authoredPx(el, 'width');
+
+  // @page{size:letter} alone is a flowing doc; with a px-width root it's a
+  // fixed sheet pretending to be paper — fall through and size to render.
+  if (paperPage && !rootPxW) {
+    return { kind: 'paper-doc', doc: doc, signals: signals,
+      frames: [{ left: 0, top: 0, width: doc.width, height: doc.height }],
+      authored: [{ width: false, height: false }] };
+  }
+
+  var sx = window.scrollX || 0, sy = window.scrollY || 0;
+  var rectOf = function (e) {
+    var r = e.getBoundingClientRect();
+    var oy; try { oy = getComputedStyle(e).overflowY; } catch (err) {}
+    var h = oy === 'visible' ? Math.max(r.height, e.scrollHeight || 0) : r.height;
+    return { left: r.left + sx, top: r.top + sy, width: r.width, height: h };
+  };
+
+  // Multi-frame: ≥2 visible non-fixed children, each with authored px width
+  // AND height, all within ±2px of each other. Off unless the page opts in
+  // via data-om-multi-frame on the stop element — guards against card grids
+  // and pricing tables that match the geometry but aren't separate canvases.
+  if (el.hasAttribute('data-om-multi-frame')) {
+    var cands = [];
+    for (var k = 0; k < el.children.length; k++) {
+      var ch = el.children[k];
+      var cs; try { cs = getComputedStyle(ch); } catch (e) { continue; }
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.position === 'fixed') continue;
+      var rc = rectOf(ch);
+      if (rc.width < 2 || rc.height < 2) continue;
+      if (!authoredPx(ch, 'width') || !authoredPx(ch, 'height')) continue;
+      cands.push(rc);
+    }
+    if (cands.length >= 2) {
+      var w0 = cands[0].width, h0 = cands[0].height, ok = true;
+      for (var q = 1; q < cands.length; q++)
+        if (Math.abs(cands[q].width - w0) > 2 || Math.abs(cands[q].height - h0) > 2) ok = false;
+      if (ok) return { kind: 'multi-frame', doc: doc, signals: signals,
+        frames: cands, authored: cands.map(function(){return{width:true,height:true}}) };
+    }
+  }
+
+  el.setAttribute('data-om-frame', '');
+  return { kind: 'single-canvas', doc: doc, signals: signals,
+    frames: [rectOf(el)],
+    authored: [{ width: rootPxW, height: authoredPx(el, 'height') }] };
+})(); } catch (e) {}
+  var frame = null;
+  if (__m && __m.kind === 'single-canvas') {
+    var f = __m.frames && __m.frames[0];
+    if (f && f.width >= 200 && f.height >= 200) {
+      frame = f;
+      var fst = document.createElement('style');
+      fst.textContent = '@media print{@page{size:' + Math.ceil(f.width) + 'px ' +
+        Math.ceil(f.height) + 'px;margin:0}' +
+        'html,body,[data-om-frame-wrap]{padding:0!important;margin:0!important;background:none!important}' +
+        '[data-om-frame]{margin:0!important}}';
+      document.body.appendChild(fst);
+    }
+  }
+  // Relax break-inside on oversized elements. An element taller than a
+  // printable page can't honor break-inside: avoid — browsers either overflow
+  // it or push it whole to the next page, leaving a blank gap, then break it
+  // anyway at an arbitrary point. After the final layout (content revealed,
+  // animations jumped), find elements taller than a page that still compute
+  // break-inside: avoid and reset them to auto, so the browser breaks them at
+  // their children's boundaries instead (children keep their own avoid). PAGE_PX
+  // is a conservative portrait estimate at 96 CSS px/in — Letter/A4 usable
+  // height minus our 0.5in margins — so only clearly-oversized elements are
+  // touched and under-page elements still stay whole. Skipped for decks (slides
+  // are sized to the page) and for fixed-size canvases (frame set, or an author
+  // px-based @page) — runs as before for flowing docs on letter/A4.
+  try {
+    if (!ds && !frame && !(__m && __m.signals && __m.signals.pxPage)) {
+      const PAGE_PX = 1024;
+      // Our print defaults add a real @page margin only when the source has
+      // no @page of its own; computed style can't tell us (it reports screen
+      // media), so read the injected rule directly.
+      const defaults = document.querySelector('style[data-omelette-print-defaults]');
+      const pageInset = /@page\s*\{[^}]*margin/.test(defaults ? defaults.textContent || '' : '');
+      const SEL = 'section,article,figure,table,pre,blockquote,[class~="card" i],[class~="page" i],[class~="sheet" i]';
+      for (const el of document.body.querySelectorAll(SEL)) {
+        if (el instanceof HTMLElement && el.offsetHeight > PAGE_PX) {
+          el.setAttribute('data-om-oversized', '');
+          // Fake-paged docs simulate sheets with over-tall break-after:page
+          // boxes; honoring the break spills half-blank pages and ends a
+          // colored box mid-sheet. Flow them, and (only when we own the page
+          // inset) drop the redundant padding/background via the rule below.
+          const cs = getComputedStyle(el);
+          if (cs.breakAfter === 'page' || cs.pageBreakAfter === 'always') {
+            el.setAttribute('data-om-fakepage', '');
+          }
+        }
+      }
+      const ost = document.createElement('style');
+      ost.textContent = '@media print{' +
+        '[data-om-oversized]{break-inside:auto !important;page-break-inside:auto !important}' +
+        '[data-om-fakepage]{break-after:auto !important;page-break-after:auto !important}' +
+        (pageInset ? '[data-om-fakepage]{padding:0 !important;background:none !important}' : '') +
+        '}';
+      document.head.appendChild(ost);
+    }
+  } catch (e) {}
+  // macOS Preview renders Skia-PDF Luminosity soft-masks as opaque grey boxes;
+  // swap the CSS that triggers them for Preview-safe forms.
+  try {
+    for (const el of document.body.querySelectorAll('*')) {
+      const cs = getComputedStyle(el);
+
+      if (cs.boxShadow !== 'none' && cs.filter === 'none') {
+        const outs = [], kept = [];
+        for (const s of cs.boxShadow.split(/,(?![^(]*[)])/)) {
+          const t = s.trim();
+          const m = t.match(/^(rgba?[(][^)]+[)]) (-?[0-9.]+px) (-?[0-9.]+px) ([0-9.]+px) -?[0-9.]+px$/);
+          if (m && parseFloat(m[4]) > 0) outs.push('drop-shadow(' + m[2] + ' ' + m[3] + ' ' + m[4] + ' ' + m[1] + ')');
+          else kept.push(t);
+        }
+        if (outs.length) {
+          el.style.setProperty('filter', outs.join(' '), 'important');
+          el.style.setProperty('box-shadow', kept.join(', ') || 'none', 'important');
+        }
+      }
+
+      const mask = cs.maskImage && cs.maskImage !== 'none' ? cs.maskImage : cs.webkitMaskImage;
+      if (mask && mask !== 'none' && cs.filter === 'none') el.style.setProperty('filter', 'opacity(1)', 'important');
+    }
+  } catch (e) {}
+  setTimeout(() => { try { window.print(); } catch (e) {} }, 200);
+})();
+</script>
+</body>
+</html>

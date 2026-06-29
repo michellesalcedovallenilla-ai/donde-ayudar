@@ -1,0 +1,121 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Badge from '../../components/Badge.astro';
+
+export async function getStaticPaths() {
+  const empleos = await getCollection('empleos');
+  return empleos.map((empleo) => ({
+    params: { slug: empleo.id },
+    props: { empleo },
+  }));
+}
+
+const { empleo } = Astro.props;
+const { data } = empleo;
+const { Content } = await render(empleo);
+
+const dateLabel = data.datePosted.toLocaleDateString('es-VE', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<BaseLayout title={data.title} description={`${data.title} en ${data.company} — ${data.remoteType}`}>
+  <section class="section">
+    <div class="container">
+      <a href="/empleos" class="back-link">← Volver a empleos</a>
+
+      <div class="detail-header">
+        <div class="tag-row mb-2">
+          <Badge variant="neutral">{data.category}</Badge>
+          <span class="badge badge-neutral">🌎 {data.remoteType}</span>
+        </div>
+        <h1>{data.title}</h1>
+        <p class="lead">{data.company} · {data.location}</p>
+      </div>
+
+      <div class="detail-grid">
+        <!-- Columna principal -->
+        <div class="detail-body">
+          <h2>Descripción</h2>
+          <p>{data.description}</p>
+
+          {
+            data.requirements.length > 0 && (
+              <>
+                <h2>Requisitos</h2>
+                <ul class="pill-list">
+                  {data.requirements.map((req) => (
+                    <li>{req}</li>
+                  ))}
+                </ul>
+              </>
+            )
+          }
+
+          <h2>Detalles</h2>
+          <div class="content"><Content /></div>
+
+          <div class="notice notice-warn mt-3">
+            <span aria-hidden="true">⚠️</span>
+            <div>
+              <strong>Antes de compartir tus datos</strong>
+              Las oportunidades son curadas manualmente. Recomendamos verificar cada oferta
+              antes de compartir información personal.
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna lateral -->
+        <aside>
+          <div class="detail-card">
+            <h3>Aplicar</h3>
+            <ul class="detail-list mb-2">
+              <li>
+                <span class="k">Empresa</span>
+                <span class="v">{data.company}</span>
+              </li>
+              <li>
+                <span class="k">Modalidad</span>
+                <span class="v">{data.remoteType}</span>
+              </li>
+              <li>
+                <span class="k">Categoría</span>
+                <span class="v">{data.category}</span>
+              </li>
+              <li>
+                <span class="k">Publicado</span>
+                <span class="v">{dateLabel}</span>
+              </li>
+              <li>
+                <span class="k">Fuente</span>
+                <span class="v" style="font-weight:500">{data.source}</span>
+              </li>
+            </ul>
+
+            <a
+              href={data.applyUrl}
+              class="btn btn-secondary btn-block"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Aplicar en el sitio externo ↗
+            </a>
+
+            {
+              data.tags.length > 0 && (
+                <ul class="pill-list mt-2">
+                  {data.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              )
+            }
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

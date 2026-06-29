@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="16" fill="#1E3A8A"/>
+  <!-- arco esperanza -->
+  <path d="M16 26a16 16 0 0 1 32 0" fill="none" stroke="#FCD116" stroke-width="4" stroke-linecap="round"/>
+  <!-- corazón solidario -->
+  <path d="M32 50S17 41 17 31a8 8 0 0 1 15-3 8 8 0 0 1 15 3c0 10-15 19-15 19z" fill="#ffffff"/>
+  <path d="M32 50S17 41 17 31a8 8 0 0 1 15-3v22z" fill="#ffffff"/>
+  <circle cx="32" cy="44" r="3" fill="#CE1126"/>
+</svg>
