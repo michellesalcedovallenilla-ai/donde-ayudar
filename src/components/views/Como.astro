@@ -1,0 +1,196 @@
+---
+import type { Lang } from '../../data/types';
+import { useStrings } from '../../data/strings';
+import { paths } from '../../data/site';
+import { href } from '../../i18n/utils';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useStrings(lang);
+const L = (p: string) => href(p, lang);
+
+const principles = [
+  { icon: 'layers', cls: 'acc', n: '01', t: t.cf1T, x: t.cf1X },
+  { icon: 'users', cls: 'grn', n: '02', t: t.cf2T, x: t.cf2X },
+  { icon: 'eye-off', cls: 'yel', n: '03', t: t.cf3T, x: t.cf3X },
+  { icon: 'hand-coins', cls: 'red', n: '04', t: t.cf4T, x: t.cf4X },
+  { icon: 'list-checks', cls: 'acc', n: '05', t: t.cf5T, x: t.cf5X },
+  { icon: 'trending-up', cls: 'grn', n: '06', t: t.cf6T, x: t.cf6X },
+];
+
+const siList = [t.si1, t.si2, t.si3, t.si4];
+const noList = [t.no1, t.no2, t.no3, t.no4];
+---
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow red">{t.comoEyebrow}</p>
+    <h1 class="h1">{t.comoH1}</h1>
+    <p class="lead">{t.comoLead}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="grid grid-fit">
+      {
+        principles.map((p) => (
+          <div class="card principle">
+            <div class="p-head">
+              <span class:list={['step-ico', p.cls]}>
+                <Icon name={p.icon} size={23} />
+              </span>
+              <span class="p-n">{p.n}</span>
+            </div>
+            <h3>{p.t}</h3>
+            <p>{p.x}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="container">
+    <p class="eyebrow acc">{t.limEyebrow}</p>
+    <h2 class="h2 lim-h2">{t.limH2}</h2>
+    <div class="grid lim-grid">
+      <div class="card">
+        <h3 class="lim-title yes"><span class="lim-mark yes"><Icon name="check" size={18} /></span>{t.siT}</h3>
+        <ul class="lim-list">
+          {siList.map((item) => <li><Icon name="check" size={17} class="yes-ico" />{item}</li>)}
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="lim-title no"><span class="lim-mark no"><Icon name="x" size={18} /></span>{t.noT}</h3>
+        <ul class="lim-list">
+          {noList.map((item) => <li><Icon name="x" size={17} class="no-ico" />{item}</li>)}
+        </ul>
+      </div>
+    </div>
+    <div class="notice lim-note">
+      <Icon name="heart-handshake" size={23} class="ico" />
+      <p><strong>{t.compT}</strong>{t.compX}</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="band">
+      <p class="eyebrow">{t.comoCtaEyebrow}</p>
+      <h2>{t.comoCtaH2}</h2>
+      <p>{t.comoCtaX}</p>
+      <div class="actions">
+        <a class="btn btn-yellow" href={L(paths.publicar)}><Icon name="plus" />{t.comoCtaB1}</a>
+        <a class="btn band-ghost" href={L(paths.casos)}>{t.comoCtaB2}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .principle {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 26px;
+  }
+  .p-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .step-ico {
+    display: inline-flex;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-ico.acc { background: var(--accs); color: var(--acc); }
+  .step-ico.yel { background: var(--yels); color: var(--yelink); }
+  .step-ico.grn { background: var(--grns); color: var(--grn); }
+  .step-ico.red { background: var(--reds); color: var(--red); }
+  .p-n {
+    font-size: 34px;
+    font-weight: 800;
+    color: var(--srf2);
+    line-height: 1;
+  }
+  .principle h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 4px 0 0;
+  }
+  .principle p {
+    margin: 0;
+    color: var(--txs);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+
+  .lim-h2 {
+    margin-bottom: 28px;
+  }
+  .lim-grid {
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  }
+  .lim-card {
+    padding: 26px;
+  }
+  .lim-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 17px;
+    font-weight: 700;
+    margin: 0 0 16px;
+  }
+  .lim-title.yes { color: var(--grn); }
+  .lim-title.no { color: var(--red); }
+  .lim-mark {
+    display: inline-flex;
+    width: 30px;
+    height: 30px;
+    border-radius: 9px;
+    align-items: center;
+    justify-content: center;
+  }
+  .lim-mark.yes { background: var(--grns); }
+  .lim-mark.no { background: var(--reds); }
+  .lim-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 11px;
+  }
+  .lim-list li {
+    display: flex;
+    gap: 9px;
+    font-size: 14.5px;
+    color: var(--txs);
+    line-height: 1.5;
+  }
+  .lim-list :global(.yes-ico) { color: var(--grn); flex: 0 0 auto; margin-top: 2px; }
+  .lim-list :global(.no-ico) { color: var(--red); flex: 0 0 auto; margin-top: 2px; }
+  .lim-note {
+    margin-top: 24px;
+  }
+  .band-ghost {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #fff;
+  }
+  .band-ghost:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: #fff;
+  }
+</style>

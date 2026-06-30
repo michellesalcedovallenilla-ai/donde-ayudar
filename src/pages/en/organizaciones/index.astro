@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import Organizaciones from '../../../components/views/Organizaciones.astro';
+import { useStrings } from '../../../data/strings';
+const lang = 'en' as const;
+const t = useStrings(lang);
+---
+
+<BaseLayout title={t.orgsPH1} description={t.orgsPLead} lang={lang}>
+  <Organizaciones lang={lang} />
+</BaseLayout>

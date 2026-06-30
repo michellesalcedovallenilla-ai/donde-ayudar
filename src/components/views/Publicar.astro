@@ -1,0 +1,317 @@
+---
+import type { Lang } from '../../data/types';
+import { useStrings } from '../../data/strings';
+import { contactInbox } from '../../data/site';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useStrings(lang);
+
+const steps = [t.cur1, t.cur2, t.cur3, t.cur4];
+---
+
+<section class="page-hero yellow">
+  <div class="container">
+    <p class="eyebrow red">{t.pubEyebrow}</p>
+    <h1 class="h1">{t.pubH1}</h1>
+    <p class="lead">{t.pubLead}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container layout">
+    <div class="main-col">
+      <div class="chips tabs" role="tablist">
+        <button type="button" class="tab" data-tab="job" role="tab" aria-selected="true">
+          <Icon name="briefcase" size={17} />{t.ctaPublicar}
+        </button>
+        <button type="button" class="tab" data-tab="org" role="tab" aria-selected="false">
+          <Icon name="handshake" size={17} />{t.footConectar}
+        </button>
+      </div>
+
+      {/*
+        TODO: wire these forms to a real submission channel before launch.
+        Right now they only show a visual confirmation (no data is sent).
+        Options to connect later: a mailto: action, Netlify Forms
+        (data-netlify), Formspree, or a serverless endpoint.
+      */}
+
+      <!-- JOB FORM -->
+      <div class="card form-card" data-panel="job">
+        <h2>{t.pubJobT}</h2>
+        <p class="sub">{t.pubJobSub}</p>
+        <div class="sent" data-sent hidden>
+          <Icon name="circle-check-big" size={24} class="ico" />
+          <div><strong>{t.pubSentT}</strong><span>{t.pubSentX}</span></div>
+        </div>
+        <form data-form>
+          <div class="grid2">
+            <label class="field">{t.lTitulo}<input name="titulo" required placeholder={t.phTitulo} /></label>
+            <label class="field">{t.lEmpresa}<input name="empresa" required placeholder={t.phEmpresa} /></label>
+          </div>
+          <div class="grid2">
+            <label class="field"
+              >{t.lModalidad}<select name="modalidad" required>
+                <option>{t.optRemoto}</option>
+                <option>{t.optPresencial}</option>
+                <option>{t.optHibrido}</option>
+              </select></label
+            >
+            <label class="field">{t.lUbicacion}<input name="ubicacion" placeholder={t.phUbicacion} /></label>
+          </div>
+          <div class="grid2">
+            <label class="field">{t.lCategoria}<input name="categoria" required placeholder={t.phCategoria} /></label>
+            <label class="field">{t.lCorreo}<input name="correo" type="email" required placeholder={t.phCorreo} /></label>
+          </div>
+          <label class="field"
+            >{t.lDescripcion}<textarea name="descripcion" rows="4" required placeholder={t.phDescripcion}></textarea></label
+          >
+          <label class="field">{t.lLink}<input name="link" required placeholder="https://..." /></label>
+          <button type="submit" class="btn btn-blue btn-full"><Icon name="send" size={17} />{t.pubJobBtn}</button>
+        </form>
+      </div>
+
+      <!-- ORG FORM -->
+      <div class="card form-card" data-panel="org" hidden>
+        <h2>{t.pubOrgT}</h2>
+        <p class="sub">{t.pubOrgSub}</p>
+        <div class="sent" data-sent hidden>
+          <Icon name="circle-check-big" size={24} class="ico" />
+          <div><strong>{t.pubOrgSentT}</strong><span>{t.pubOrgSentX}</span></div>
+        </div>
+        <form data-form>
+          <div class="grid2">
+            <label class="field">{t.lOrgNombre}<input name="org-nombre" required /></label>
+            <label class="field">{t.lOrgTipo}<input name="org-tipo" required placeholder={t.phOrgTipo} /></label>
+          </div>
+          <label class="field">{t.lOrgAreas}<input name="org-areas" required placeholder={t.phOrgAreas} /></label>
+          <label class="field">{t.lOrgContacto}<input name="org-contacto" required placeholder={t.phOrgContacto} /></label>
+          <button type="submit" class="btn btn-yellow btn-full"><Icon name="handshake" size={17} />{t.pubOrgBtn}</button>
+        </form>
+      </div>
+    </div>
+
+    <aside class="aside">
+      <div class="card">
+        <h3>{t.curamosT}</h3>
+        <ol class="steps">
+          {steps.map((s, i) => <li><span class="num">{i + 1}</span><span>{s}</span></li>)}
+        </ol>
+        <div class="notice mini">
+          <Icon name="lock" size={19} class="ico" />
+          <p><strong>{t.sinBackT}</strong>{t.sinBackX}</p>
+        </div>
+        <p class="direct">
+          {t.escribeDirecto} <a href={`mailto:${contactInbox}`}>{contactInbox}</a>
+        </p>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .layout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    align-items: flex-start;
+  }
+  .main-col {
+    flex: 1 1 440px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+  .tabs .tab {
+    flex: 1 1 auto;
+    justify-content: center;
+    padding: 12px 18px;
+    border-width: 2px;
+    font-size: 14.5px;
+  }
+  .tabs .tab[aria-selected='true'] {
+    border-color: var(--blue);
+    background: var(--blue);
+    color: var(--on);
+  }
+
+  .form-card {
+    padding: clamp(22px, 3vw, 30px);
+  }
+  .form-card[hidden] {
+    display: none;
+  }
+  .form-card h2 {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 0 0 6px;
+  }
+  .sub {
+    color: var(--txm);
+    font-size: 14px;
+    line-height: 1.55;
+    margin: 0 0 22px;
+  }
+  .grid2 {
+    display: grid;
+    gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    margin-bottom: 16px;
+  }
+  .field {
+    display: block;
+    font-weight: 600;
+    font-size: 13.5px;
+    color: var(--txt);
+    margin-bottom: 16px;
+  }
+  .grid2 .field {
+    margin-bottom: 0;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    display: block;
+    width: 100%;
+    margin-top: 6px;
+    padding: 12px 14px;
+    border: 1.5px solid var(--bd2);
+    border-radius: 12px;
+    font: inherit;
+    font-size: 14.5px;
+    font-weight: 400;
+    background: var(--bg);
+    color: var(--txt);
+    resize: vertical;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    outline: none;
+    border-color: var(--acc);
+    background: var(--srf);
+  }
+  .form-card .btn {
+    margin-top: 6px;
+  }
+
+  .sent {
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+    background: var(--grns);
+    border: 1px solid var(--grn);
+    border-radius: 14px;
+    padding: 20px;
+  }
+  .sent[hidden] {
+    display: none;
+  }
+  .sent strong {
+    display: block;
+    color: var(--grn);
+    font-size: 15.5px;
+    margin-bottom: 3px;
+  }
+  .sent span {
+    color: var(--txs);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .sent :global(svg) {
+    color: var(--grn);
+    flex: 0 0 auto;
+    margin-top: 1px;
+  }
+
+  .aside {
+    flex: 1 1 290px;
+    max-width: 360px;
+    position: sticky;
+    top: 90px;
+  }
+  .aside h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 0 0 18px;
+  }
+  .steps {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 16px;
+  }
+  .steps li {
+    display: flex;
+    gap: 13px;
+    align-items: flex-start;
+    font-size: 14px;
+    color: var(--txs);
+    line-height: 1.5;
+  }
+  .num {
+    display: inline-flex;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--accs);
+    color: var(--acc);
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    flex: 0 0 auto;
+  }
+  .notice.mini {
+    margin-top: 20px;
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+  .direct {
+    margin: 16px 0 0;
+    font-size: 13px;
+    color: var(--txm);
+  }
+  .direct a {
+    color: var(--acc);
+    font-weight: 600;
+  }
+  .direct a:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<script>
+  // Tab switching
+  const tabs = document.querySelectorAll<HTMLButtonElement>('.tabs .tab');
+  const panels = document.querySelectorAll<HTMLElement>('[data-panel]');
+  tabs.forEach((tab) => {
+    tab.addEventListener('click', () => {
+      tabs.forEach((tt) => tt.setAttribute('aria-selected', 'false'));
+      tab.setAttribute('aria-selected', 'true');
+      panels.forEach((panel) => {
+        panel.hidden = panel.dataset.panel !== tab.dataset.tab;
+      });
+    });
+  });
+
+  // TODO: replace this stub with a real submission (mailto / Netlify Forms /
+  // Formspree / serverless). For now it only reveals the confirmation message.
+  document.querySelectorAll<HTMLFormElement>('[data-form]').forEach((form) => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const card = form.closest('[data-panel]');
+      const sent = card?.querySelector<HTMLElement>('[data-sent]');
+      if (sent) sent.hidden = false;
+      form.hidden = true;
+    });
+  });
+</script>

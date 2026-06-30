@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import EmpleosList from '../../../components/views/EmpleosList.astro';
+import { useStrings } from '../../../data/strings';
+const lang = 'en' as const;
+const t = useStrings(lang);
+---
+
+<BaseLayout title={t.empleosPH1} description={t.empleosPLead} lang={lang}>
+  <EmpleosList lang={lang} />
+</BaseLayout>

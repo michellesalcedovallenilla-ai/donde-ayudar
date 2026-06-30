@@ -1,0 +1,100 @@
+---
+import type { Lang } from '../../data/types';
+import { useStrings } from '../../data/strings';
+import { casos } from '../../data/casos';
+import CaseCard from '../CaseCard.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useStrings(lang);
+
+const statusOrder = { urgent: 0, verified: 1, pending: 2 } as const;
+const sorted = [...casos].sort(
+  (a, b) => statusOrder[a.status] - statusOrder[b.status] || (a.date < b.date ? 1 : -1)
+);
+
+const hasDonation = (c: (typeof casos)[number]) =>
+  c.status !== 'pending' && (c.donationMethods?.length ?? 0) > 0;
+
+const filters = [
+  { key: 'todos', label: t.fTodos, count: sorted.length },
+  { key: 'verified', label: t.fVerificados, count: sorted.filter((c) => c.status === 'verified').length },
+  { key: 'urgent', label: t.fUrgentes, count: sorted.filter((c) => c.status === 'urgent').length },
+  { key: 'pending', label: t.fPendientes, count: sorted.filter((c) => c.status === 'pending').length },
+  { key: 'donacion', label: t.fConDonacion, count: sorted.filter(hasDonation).length },
+];
+---
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow red">{t.casosPEyebrow}</p>
+    <h1 class="h1">{t.casosPH1}</h1>
+    <p class="lead">{t.casosPLead}</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="notice notice-mb">
+      <Icon name="shield-check" size={21} class="ico" />
+      <p><strong>{t.casosNoticeT}</strong>{t.casosNoticeX}</p>
+    </div>
+
+    <div class="chips filter-chips" role="group" aria-label={t.casosPEyebrow}>
+      {
+        filters.map((f, i) => (
+          <button type="button" class="chip" data-filter={f.key} aria-pressed={i === 0 ? 'true' : 'false'}>
+            {f.label}
+            <span class="count">{f.count}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="empty-state" data-empty hidden>{t.casosEmpty}</div>
+
+    <div class="grid grid-cards" data-grid>
+      {sorted.map((caso) => <CaseCard caso={caso} lang={lang} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .notice-mb {
+    margin-bottom: 26px;
+  }
+  .filter-chips {
+    margin-bottom: 26px;
+  }
+</style>
+
+<script>
+  const chips = document.querySelectorAll<HTMLButtonElement>('.filter-chips .chip');
+  const cards = document.querySelectorAll<HTMLElement>('[data-grid] .caso-card');
+  const empty = document.querySelector<HTMLElement>('[data-empty]');
+
+  function apply(filter: string) {
+    let visible = 0;
+    cards.forEach((card) => {
+      const status = card.dataset.status;
+      const donation = card.dataset.donation === 'true';
+      const show =
+        filter === 'todos' ||
+        (filter === 'donacion' ? donation : status === filter);
+      card.hidden = !show;
+      if (show) visible++;
+    });
+    if (empty) empty.hidden = visible !== 0;
+  }
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      chips.forEach((c) => c.setAttribute('aria-pressed', 'false'));
+      chip.setAttribute('aria-pressed', 'true');
+      apply(chip.dataset.filter || 'todos');
+    });
+  });
+</script>

@@ -1,6 +1,6 @@
 # Donde Ayudar
 
-Plataforma puente (sitio **100% estático** en Astro) que conecta a familias verificadas
+Plataforma puente (**sitio 100% estático en Astro**) que conecta a familias verificadas
 con organizaciones aliadas, donantes, recruiters y **oportunidades de empleo remoto**.
 
 > **Conecta ayuda. Abre oportunidades. Reconstruimos juntos.**
@@ -13,21 +13,24 @@ con organizaciones aliadas, donantes, recruiters y **oportunidades de empleo rem
 - **Sin datos sensibles**: nada de cédulas, pasaportes ni documentos privados.
 - **Sin login** ni base de datos.
 - **Sin scraping**: las oportunidades se curan manualmente.
-- Todo es estático, seguro y simple — listo para GitHub Pages, Vercel o Netlify.
+- Todo es estático, seguro y simple — listo para Netlify, Vercel o GitHub Pages.
 
 ---
 
 ## Stack
 
-- [Astro](https://astro.build) (sitio estático)
-- Content Collections + Markdown/MDX
-- CSS propio (sin frameworks), responsive
+- [Astro](https://astro.build) v5 — sitio estático (sin frameworks de UI, sin React).
+- **i18n nativo de Astro**: español en la raíz (`/`), inglés bajo `/en/`.
+- Contenido tipado en TypeScript (`src/data/`), renderizado a HTML en build.
+- [astro-icon](https://github.com/natemoo-re/astro-icon) + Lucide — íconos SVG inline (sin CDN).
+- [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/) — `sitemap-index.xml`.
+- CSS propio con design tokens (`src/styles/global.css`) + estilos `scoped` por componente.
 
 ---
 
 ## Requisitos
 
-- [Node.js](https://nodejs.org) **18.17+** o **20+**
+- [Node.js](https://nodejs.org) **20+**
 - npm (incluido con Node)
 
 ## Correr en local
@@ -52,172 +55,112 @@ npm run preview    # sirve /dist localmente para revisar
 
 ```
 .
-├── astro.config.mjs
+├── astro.config.mjs          # config + i18n (es/en) + integraciones
 ├── src
-│   ├── content.config.ts        # esquemas de las content collections
-│   ├── content
-│   │   ├── casos/               # 1 archivo .md por familia/persona
-│   │   ├── empleos/             # 1 archivo .md por oportunidad remota
-│   │   └── organizaciones/      # 1 archivo .md por organización aliada
-│   ├── components
-│   │   ├── Header.astro
-│   │   ├── Footer.astro
-│   │   ├── CaseCard.astro
-│   │   ├── JobCard.astro
-│   │   ├── OrganizationCard.astro
-│   │   ├── Badge.astro
-│   │   └── CTASection.astro
-│   ├── layouts
-│   │   └── BaseLayout.astro
-│   ├── pages
-│   │   ├── index.astro              # Home
-│   │   ├── como-funciona.astro
-│   │   ├── publicar-oportunidad.astro
-│   │   ├── casos
-│   │   │   ├── index.astro          # listado
-│   │   │   └── [slug].astro         # detalle (getStaticPaths)
-│   │   ├── empleos
-│   │   │   ├── index.astro
-│   │   │   └── [slug].astro
-│   │   └── organizaciones
-│   │       └── index.astro
-│   └── styles
-│       └── global.css
-└── public
-    └── favicon.svg
+│   ├── data/                 # ÚNICA fuente de contenido (tipado, bilingüe)
+│   │   ├── types.ts          # tipos + helper pick(value, lang)
+│   │   ├── strings.ts        # textos de UI (ES/EN), tipados
+│   │   ├── casos.ts          # casos (familias / personas)
+│   │   ├── empleos.ts        # ofertas de empleo
+│   │   ├── organizaciones.ts # organizaciones aliadas
+│   │   └── site.ts           # rutas canónicas, nav, correos de contacto
+│   ├── i18n/utils.ts         # langFromUrl, href(path, lang), switchLocalePath
+│   ├── layouts/BaseLayout.astro
+│   ├── components/           # Header, Footer, cards, Badge, Icon, BodyBlocks
+│   │   └── views/            # el cuerpo de cada página (Home, CasosList, …)
+│   ├── pages/                # rutas ES (/) — archivos finos que envuelven views
+│   │   └── en/               # rutas EN (/en/) — espejo de las anteriores
+│   └── styles/global.css     # design tokens + clases reutilizables
+└── public/                   # assets estáticos (logo, favicon, _headers, robots.txt)
 ```
 
+Las rutas en `src/pages/` son envoltorios delgados: importan `BaseLayout` + una *view*
+de `src/components/views/` y le pasan `lang`. Por eso ES y EN comparten exactamente el
+mismo markup y solo cambian de idioma.
+
 ---
-
-## Marca (Donde Ayudar)
-
-La identidad visual sigue el brandboard de **Donde Ayudar**:
-
-- **Logo:** `public/logo.png` (se usa en header y footer; en el footer se muestra en
-  versión negativa/blanca mediante CSS). Reemplázalo por el archivo oficial cuando lo tengas.
-- **Tipografía:** Poppins (cargada desde Google Fonts en `BaseLayout.astro`).
-- **Paleta** (variables en `src/styles/global.css`):
-  - Azul Confianza `#1E3A8A` — títulos, navegación, botones primarios, links.
-  - Amarillo Esperanza `#FCD116` — CTAs secundarios, highlights, badge "Remoto".
-  - Rojo Solidaridad `#CE1126` — urgencia/alertas, con moderación.
-  - Gris fondo `#F5F7FA`, gris texto `#1F2937`, blanco `#FFFFFF`.
-- **UI:** cards blancas, radios 16–24px, sombras suaves, botones tipo pill.
 
 ## Editar contenido
 
-Todo el contenido vive en `src/content/`. Para agregar algo, **crea un nuevo archivo `.md`**
-en la carpeta correspondiente. El nombre del archivo (sin `.md`) se convierte en la URL
-(el `slug`). Por ejemplo, `src/content/casos/familia-rojas-maiquetia.md` → `/casos/familia-rojas-maiquetia/`.
+Todo el contenido vive en **`src/data/`** como TypeScript tipado. Los campos bilingües
+usan `{ es: '…', en: '…' }`; el helper `pick(value, lang)` elige el idioma correcto.
 
 ### Agregar un caso
 
-Crea `src/content/casos/mi-caso.md`:
+Añade un objeto al array `casos` en `src/data/casos.ts`. El `id` se convierte en la URL
+(`/casos/<id>/` y `/en/casos/<id>/`):
 
-```markdown
----
-title: "Nombre del caso"
-location: "Ubicación general (sin dirección exacta)"
-status: "verified"        # verified | pending | urgent
-verifiedBy: "Organización que verifica"
-summary: "Resumen breve y público."
-needs:
-  - "Necesidad principal"
-  - "Otra necesidad"
-skills:
-  - "Habilidad 1"
-  - "Habilidad 2"
-remoteWorkAvailability: "Disponibilidad para trabajo remoto"
-contactMethod: "Canal seguro (a través de una organización)"
-supportLink: "https://..."   # opcional
-dateUpdated: 2026-06-29
----
-
-Texto libre en Markdown con el contexto del caso.
+```ts
+{
+  id: 'mi-caso',
+  status: 'verified',            // verified | urgent | pending
+  date: '2026-06-29',
+  supportLink: null,             // URL externa o null
+  title: { es: '…', en: '…' },
+  location: { es: '…', en: '…' },
+  verifiedBy: { es: '…', en: '…' },
+  dateLabel: { es: '…', en: '…' },
+  summary: { es: '…', en: '…' },
+  needs: { es: ['…'], en: ['…'] },
+  skills: { es: ['…'], en: ['…'] },
+  remoteWorkAvailability: { es: '…', en: '…' },
+  contactMethod: { es: '…', en: '…' },
+  // donationMethods es opcional (zelle | paypal | bank_of_america | pago_movil)
+  body: { es: [{ t: 'p', text: '…' }], en: [{ t: 'p', text: '…' }] },
+}
 ```
 
 > ⚠️ **Seguridad:** publica solo información pública. Nunca incluyas cédulas, pasaportes,
-> direcciones exactas ni documentos personales.
+> direcciones exactas ni documentos personales. Los datos incluidos son **ejemplos
+> ficticios** — reemplázalos por casos reales verificados antes de publicar.
 
-### Agregar un empleo
+Empleos y organizaciones funcionan igual (`src/data/empleos.ts`, `organizaciones.ts`).
+TypeScript valida la forma de cada objeto: si falta un campo, `npm run build` avisa.
 
-Crea `src/content/empleos/mi-empleo.md`:
+### Textos de la interfaz
 
-```markdown
----
-title: "Título del puesto"
-company: "Empresa"
-location: "Remoto"
-remoteType: "100% remoto"   # 100% remoto | Híbrido | Remoto LatAm | Remoto global
-category: "Categoría"
-description: "Descripción del rol."
-requirements:
-  - "Requisito 1"
-applyUrl: "https://..."      # link externo para aplicar
-source: "De dónde salió la oferta (curada manualmente)"
-datePosted: 2026-06-29
-tags:
-  - "etiqueta"
----
-
-Detalles adicionales en Markdown.
-```
-
-### Agregar una organización
-
-Crea `src/content/organizaciones/mi-org.md`:
-
-```markdown
----
-title: "Nombre de la organización"
-type: "Fundación"            # texto libre
-location: "Ubicación"
-description: "Qué hace."
-contact: "correo@org.org"    # email o URL (wa.me, etc.)
-website: "https://..."       # opcional
-verified: true               # true | false
-areasOfSupport:
-  - "Área 1"
----
-
-Texto libre.
-```
-
-Los campos están validados por Zod en `src/content.config.ts`. Si un campo obligatorio falta
-o tiene un tipo incorrecto, `npm run dev` / `npm run build` te avisará con un error claro.
+Viven en `src/data/strings.ts` (objetos `es` y `en`). El bloque `en` usa
+`satisfies Record<keyof typeof es, string>`, así que **ambos idiomas deben tener las
+mismas claves** o el build falla.
 
 ---
 
-## Configurar correos de contacto
+## Formularios
 
-La página `/publicar-oportunidad` usa formularios `mailto:` (sin backend). Cambia las
-direcciones en `src/pages/publicar-oportunidad.astro`:
-
-```ts
-const inbox = 'oportunidades@dondeayudar.example';
-const inboxOrg = 'aliados@dondeayudar.example';
-```
-
-Y en `src/components/Footer.astro` el enlace de contacto.
+`/publicar-oportunidad` tiene el formulario de oferta de empleo y el de organización.
+Hoy **solo muestran una confirmación visual y no envían nada** (ver el `TODO` en
+`src/components/views/Publicar.astro`). Antes de lanzar, conéctalos a un canal real:
+`mailto:`, [Netlify Forms](https://docs.netlify.com/forms/setup/), Formspree o un
+endpoint serverless. Los correos de contacto están centralizados en `src/data/site.ts`.
 
 ---
 
 ## Deploy
 
-El sitio es estático: el build produce HTML/CSS/JS en `/dist`.
+El sitio es estático: el build produce HTML/CSS/JS en `/dist`. Cambia `site` en
+`astro.config.mjs` por tu dominio final (afecta `canonical`, `hreflang` y el sitemap).
 
-### Vercel
-1. Importa el repo en [vercel.com](https://vercel.com).
-2. Framework: **Astro** (autodetectado). Sin configuración extra.
+Las cabeceras de seguridad (CSP, HSTS, etc.) están en **`public/_headers`** (Netlify) y
+duplicadas en **`vercel.json`** (Vercel). Si cambias una, cambia la otra.
 
 ### Netlify
-1. Conecta el repo en [netlify.com](https://netlify.com).
-2. Build command: `npm run build` · Publish directory: `dist`.
+Build command `npm run build` · Publish directory `dist`. Headers desde `public/_headers`.
+
+### Vercel
+Framework **Astro** (autodetectado). Headers desde `vercel.json`.
 
 ### GitHub Pages
-1. En `astro.config.mjs`, ajusta `site` (tu dominio) y, si publicas en un subdirectorio
-   (`usuario.github.io/repo`), descomenta y ajusta `base: '/repo'`.
-2. Usa la acción oficial [`withastro/action`](https://github.com/withastro/action) o
-   despliega el contenido de `/dist`.
+Usa la acción oficial [`withastro/action`](https://github.com/withastro/action) o
+despliega el contenido de `/dist`. (En Pages no aplican `_headers`/`vercel.json`.)
+
+---
+
+## Pendientes conocidos
+
+- **Formularios** sin backend (ver sección Formularios).
+- Correos de contacto son *placeholders* (`@dondeayudar.example`) en `src/data/site.ts`.
+- Astro 5.x tiene avisos de seguridad cuyo *fix* está en la rama 7.x (cambio mayor);
+  evaluar la actualización por separado.
 
 ---
 

@@ -1,47 +1,96 @@
 ---
+import type { Empleo, Lang } from '../data/types';
+import { pick } from '../data/types';
+import { useStrings } from '../data/strings';
+import { empleoPath } from '../data/site';
+import { href } from '../i18n/utils';
 import Badge from './Badge.astro';
-import type { CollectionEntry } from 'astro:content';
+import Icon from './Icon.astro';
 
 interface Props {
-  empleo: CollectionEntry<'empleos'>;
+  empleo: Empleo;
+  lang: Lang;
 }
+const { empleo, lang } = Astro.props;
+const t = useStrings(lang);
 
-const { empleo } = Astro.props;
-const { data, id } = empleo;
+const modeMeta = {
+  remoto: { variant: 'remoto' as const, label: t.fRemoto },
+  presencial: { variant: 'presencial' as const, label: t.fPresencial },
+  hibrido: { variant: 'hibrido' as const, label: t.fHibrido },
+}[empleo.mode];
 
-const dateLabel = data.datePosted.toLocaleDateString('es-VE', {
-  day: 'numeric',
-  month: 'short',
-  year: 'numeric',
-});
+const desc = pick(empleo.description, lang);
+const shortDesc = desc.length > 120 ? desc.slice(0, 120) + '…' : desc;
 ---
 
-<article class="card">
-  <div class="tag-row" style="justify-content:space-between; align-items:flex-start">
-    <Badge variant="remote">{data.remoteType}</Badge>
-    <span class="muted" style="font-size:0.82rem">{dateLabel}</span>
+<a href={href(empleoPath(empleo.id), lang)} class="card card-link job-card" data-mode={empleo.mode}>
+  <div class="row">
+    <Badge variant={modeMeta.variant} label={modeMeta.label} dot />
+    <span class="date">{pick(empleo.dateLabel, lang)}</span>
   </div>
-
-  <h3><a href={`/empleos/${id}/`}>{data.title}</a></h3>
-
-  <div class="card-meta">
-    <span>🏢 {data.company}</span>
-    <span>🗂️ {data.category}</span>
+  <h3>{pick(empleo.title, lang)}</h3>
+  <div class="facts">
+    <span><Icon name="building-2" size={14} />{empleo.company}</span>
+    <span><Icon name="map-pin" size={14} />{pick(empleo.place, lang)}</span>
   </div>
+  <p class="summary">{shortDesc}</p>
+  <span class="verified"><Icon name="badge-check" size={15} />{t.ofertaVerificada}</span>
+  <div class="foot">
+    <span class="btn btn-yellow btn-full">{t.verAplicar}<Icon name="arrow-right" size={16} /></span>
+  </div>
+</a>
 
-  <p class="muted" style="margin:0; font-size:0.95rem">
-    {data.description.slice(0, 130)}{data.description.length > 130 ? '…' : ''}
-  </p>
-
-  {
-    data.tags.length > 0 && (
-      <ul class="pill-list">
-        {data.tags.slice(0, 4).map((tag) => <li>{tag}</li>)}
-      </ul>
-    )
+<style>
+  .job-card {
+    gap: 12px;
   }
-
-  <div class="card-footer">
-    <a href={`/empleos/${id}/`} class="btn btn-secondary btn-block">Ver y aplicar</a>
-  </div>
-</article>
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .date {
+    color: var(--txm);
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+  h3 {
+    font-size: 18.5px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 2px 0 0;
+    line-height: 1.3;
+  }
+  .facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    color: var(--txs);
+    font-size: 13.5px;
+  }
+  .facts span {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .summary {
+    margin: 0;
+    color: var(--txs);
+    font-size: 14.5px;
+    line-height: 1.6;
+  }
+  .verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--grn);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+  .foot {
+    margin-top: auto;
+    padding-top: 6px;
+  }
+</style>

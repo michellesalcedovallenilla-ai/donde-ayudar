@@ -1,26 +1,16 @@
 ---
+/** Status / work-mode / ally badge. Variant maps to a class in global.css;
+ *  unknown variants fall back to the neutral grey badge. */
 interface Props {
-  /** Variante visual del badge */
-  variant?: 'verified' | 'pending' | 'urgent' | 'remote' | 'ally' | 'neutral';
-  /** Mostrar punto indicador a la izquierda */
+  variant?: 'verified' | 'urgent' | 'pending' | 'remoto' | 'presencial' | 'hibrido' | 'ally' | 'neutral';
+  label: string;
   dot?: boolean;
-  /** Texto a mostrar; si se omite, se usa el slot */
-  label?: string;
 }
-
-const { variant = 'neutral', dot = false, label } = Astro.props;
-
-const labels: Record<string, string> = {
-  verified: 'Verificado',
-  pending: 'En verificación',
-  urgent: 'Urgente',
-  remote: 'Remoto',
-  ally: 'Organización aliada',
-};
-
-const text = label ?? labels[variant];
+const { variant = 'neutral', label, dot = false } = Astro.props;
+const variantClass = ['verified', 'urgent', 'remoto', 'presencial', 'ally'].includes(variant) ? variant : '';
 ---
 
-<span class:list={['badge', `badge-${variant}`, { 'badge-dot': dot }]}>
-  {text ? text : <slot />}
+<span class:list={['badge', variantClass]}>
+  {dot && <span class="dot"></span>}
+  {label}
 </span>

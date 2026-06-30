@@ -1,6 +1,5 @@
-# Netlify build for Donde Ayudar — Astro site serving the design mockup.
-# The mockup lives in public/ (index.html + support.js + content.js + assets/)
-# and is served by the Astro build. Security/caching headers in public/_headers.
+# Netlify build for Donde Ayudar — static Astro site.
+# Security/caching headers live in public/_headers (copied into dist/ on build).
 
 [build]
   command = "npm run build"

@@ -1,0 +1,73 @@
+---
+import type { Block } from '../data/types';
+import Icon from './Icon.astro';
+
+interface Props {
+  blocks: Block[];
+}
+const { blocks } = Astro.props;
+---
+
+{
+  blocks.map((b) => {
+    if (b.t === 'p') return <p class="body-p">{b.text}</p>;
+    if (b.t === 'h') return <h4 class="body-h">{b.text}</h4>;
+    if (b.t === 'quote') return <blockquote class="body-quote">{b.text}</blockquote>;
+    return (
+      <ul class="body-ul">
+        {b.items.map((it) => (
+          <li>
+            <Icon name="dot" size={18} class="dot-ico" />
+            {it}
+          </li>
+        ))}
+      </ul>
+    );
+  })
+}
+
+<style>
+  .body-p {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--txs);
+    margin: 0 0 14px;
+  }
+  .body-h {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--txt);
+    margin: 18px 0 8px;
+  }
+  .body-quote {
+    margin: 6px 0 16px;
+    padding: 14px 18px;
+    background: var(--reds);
+    border-left: 4px solid var(--red);
+    border-radius: 12px;
+    color: var(--red);
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .body-ul {
+    list-style: none;
+    display: grid;
+    gap: 8px;
+    padding: 0;
+    margin: 0 0 14px;
+  }
+  .body-ul li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 15px;
+    color: var(--txs);
+    line-height: 1.55;
+  }
+  .body-ul :global(.dot-ico) {
+    color: var(--acc);
+    flex: 0 0 auto;
+    margin-top: 1px;
+  }
+</style>

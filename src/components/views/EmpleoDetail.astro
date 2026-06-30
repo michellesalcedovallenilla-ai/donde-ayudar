@@ -1,0 +1,285 @@
+---
+import type { Empleo, Lang } from '../../data/types';
+import { pick } from '../../data/types';
+import { useStrings } from '../../data/strings';
+import { paths } from '../../data/site';
+import { href } from '../../i18n/utils';
+import Badge from '../Badge.astro';
+import Icon from '../Icon.astro';
+import BodyBlocks from '../BodyBlocks.astro';
+
+interface Props {
+  empleo: Empleo;
+  lang: Lang;
+}
+const { empleo, lang } = Astro.props;
+const t = useStrings(lang);
+
+const modeMeta = {
+  remoto: { variant: 'remoto' as const, label: t.fRemoto },
+  presencial: { variant: 'presencial' as const, label: t.fPresencial },
+  hibrido: { variant: 'hibrido' as const, label: t.fHibrido },
+}[empleo.mode];
+
+const reqs = pick(empleo.requirements, lang);
+const tags = pick(empleo.tags, lang);
+const hasApply = !!empleo.applyUrl && empleo.applyUrl !== '#';
+
+const meta = [
+  { icon: 'building-2', cls: 'acc', k: t.edEmpresa, v: empleo.company },
+  { icon: 'map-pin', cls: 'yel', k: t.edModalidad, v: pick(empleo.place, lang) },
+  { icon: 'layout-grid', cls: 'grn', k: t.edCategoria, v: pick(empleo.category, lang) },
+  { icon: 'calendar-days', cls: 'neutral', k: t.edPublicado, v: pick(empleo.dateLabel, lang) },
+];
+---
+
+<section class="section detail">
+  <div class="container">
+    <a class="back" href={href(paths.empleos, lang)}><Icon name="arrow-left" size={16} />{t.volverEmpleos}</a>
+
+    <div class="head-badges">
+      <span class="badge"><Icon name="tag" size={13} />{pick(empleo.category, lang)}</span>
+      <Badge variant={modeMeta.variant} label={modeMeta.label} dot />
+      <span class="verif-inline"><Icon name="badge-check" size={14} />{t.ofertaVerificada}</span>
+    </div>
+    <h1 class="detail-h1">{pick(empleo.title, lang)}</h1>
+    <p class="company"><Icon name="building-2" size={19} /><strong>{empleo.company}</strong></p>
+
+    <div class="card meta-grid">
+      {
+        meta.map((m) => (
+          <div class="meta-item">
+            <span class:list={['meta-ico', m.cls]}>
+              <Icon name={m.icon} size={20} />
+            </span>
+            <div>
+              <span class="kicker">{m.k}</span>
+              <span class="meta-v">{m.v}</span>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="cols">
+      <div class="main">
+        <h2 class="sec-h2">{t.edDescripcion}</h2>
+        <p class="body-p">{pick(empleo.description, lang)}</p>
+
+        <h2 class="sec-h2">{t.edRequisitos}</h2>
+        <ul class="req-list">
+          {reqs.map((r) => <li><Icon name="check" size={18} class="req-ico" />{r}</li>)}
+        </ul>
+
+        <h2 class="sec-h2">{t.edDetalles}</h2>
+        <BodyBlocks blocks={pick(empleo.body, lang)} />
+
+        <div class="notice warn">
+          <Icon name="triangle-alert" size={21} class="ico" />
+          <p><strong>{t.edAntesT}</strong>{t.edAntesX}</p>
+        </div>
+      </div>
+
+      <aside class="aside">
+        <div class="card">
+          <h3>{t.edAplicar}</h3>
+          <div class="source">
+            <span class="kicker">{t.edFuente}</span>
+            <span class="source-v">{pick(empleo.source, lang)}</span>
+          </div>
+          <a
+            class="btn btn-yellow btn-full"
+            href={hasApply ? empleo.applyUrl : '#'}
+            target={hasApply ? '_blank' : undefined}
+            rel="noopener noreferrer"
+          >
+            {t.edAplicarBtn}<Icon name="arrow-up-right" size={16} />
+          </a>
+          <div class="verif-row"><Icon name="badge-check" size={16} />{t.edVerif}</div>
+          <ul class="pill-list tags">
+            {tags.map((tag) => <li class="pill">{tag}</li>)}
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .detail {
+    padding-top: clamp(26px, 4vw, 40px);
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--acc);
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  .back:hover {
+    gap: 9px;
+  }
+  .head-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 16px;
+    align-items: center;
+  }
+  .verif-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--grn);
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .detail-h1 {
+    font-size: clamp(28px, 3.6vw, 42px);
+    line-height: 1.12;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--acc);
+    margin: 0 0 12px;
+    max-width: 26ch;
+  }
+  .company {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(16px, 1.5vw, 19px);
+    color: var(--txs);
+    margin: 0;
+  }
+  .company strong {
+    color: var(--txt);
+    font-weight: 600;
+  }
+  .company :global(svg) {
+    color: var(--txm);
+  }
+
+  .meta-grid {
+    margin: 28px 0 36px;
+    display: grid;
+    gap: 22px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+  .meta-item {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .meta-ico {
+    display: inline-flex;
+    width: 40px;
+    height: 40px;
+    border-radius: 11px;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+  }
+  .meta-ico.acc { background: var(--accs); color: var(--acc); }
+  .meta-ico.yel { background: var(--yels); color: var(--yelink); }
+  .meta-ico.grn { background: var(--grns); color: var(--grn); }
+  .meta-ico.neutral { background: var(--srf2); color: var(--txs); }
+  .kicker {
+    display: block;
+  }
+  .meta-v {
+    display: block;
+    font-weight: 700;
+    color: var(--txt);
+    font-size: 15px;
+    margin-top: 2px;
+  }
+
+  .cols {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
+    align-items: flex-start;
+  }
+  .main {
+    flex: 1 1 430px;
+    min-width: 0;
+  }
+  .sec-h2 {
+    font-size: 21px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 0 0 12px;
+  }
+  .sec-h2:not(:first-child) {
+    margin-top: 28px;
+  }
+  .body-p {
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--txs);
+    margin: 0 0 14px;
+  }
+  .req-list {
+    list-style: none;
+    display: grid;
+    gap: 9px;
+    padding: 0;
+    margin: 0;
+  }
+  .req-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    font-size: 15px;
+    color: var(--txs);
+    line-height: 1.55;
+  }
+  .req-list :global(.req-ico) {
+    color: var(--grn);
+    flex: 0 0 auto;
+    margin-top: 1px;
+  }
+
+  .aside {
+    flex: 1 1 290px;
+    max-width: 360px;
+    position: sticky;
+    top: 90px;
+  }
+  .aside h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 0 0 16px;
+  }
+  .source {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--bd);
+  }
+  .source-v {
+    font-size: 13.5px;
+    color: var(--txt);
+    font-weight: 500;
+    line-height: 1.5;
+  }
+  .verif-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid var(--bd);
+    color: var(--grn);
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .tags {
+    margin-top: 14px;
+  }
+</style>

@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Privacidad from '../../components/views/Privacidad.astro';
+import { useStrings } from '../../data/strings';
+const lang = 'en' as const;
+const t = useStrings(lang);
+---
+
+<BaseLayout title={t.privH1} description={t.privLead} lang={lang}>
+  <Privacidad lang={lang} />
+</BaseLayout>

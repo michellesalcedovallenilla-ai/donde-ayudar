@@ -1,0 +1,452 @@
+---
+import type { Lang } from '../../data/types';
+import { useStrings } from '../../data/strings';
+import { casos } from '../../data/casos';
+import { empleos } from '../../data/empleos';
+import { paths } from '../../data/site';
+import { href } from '../../i18n/utils';
+import CaseCard from '../CaseCard.astro';
+import JobCard from '../JobCard.astro';
+import Icon from '../Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useStrings(lang);
+const L = (p: string) => href(p, lang);
+
+const statusOrder = { urgent: 0, verified: 1, pending: 2 } as const;
+const featuredCasos = [...casos]
+  .sort((a, b) => statusOrder[a.status] - statusOrder[b.status] || (a.date < b.date ? 1 : -1))
+  .slice(0, 3);
+const featuredEmpleos = [...empleos].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 3);
+
+const steps = [
+  { icon: 'shield-check', cls: 'acc', n: '01', t: t.paso1T, x: t.paso1X, l: t.paso1L, href: L(paths.casos) },
+  { icon: 'lock', cls: 'yel', n: '02', t: t.paso2T, x: t.paso2X, l: t.paso2L, href: L(paths.como) },
+  { icon: 'briefcase', cls: 'grn', n: '03', t: t.paso3T, x: t.paso3X, l: t.paso3L, href: L(paths.empleos) },
+];
+
+const trustCards = [
+  { icon: 'hand-coins', cls: 'acc', t: t.tc1T, x: t.tc1X },
+  { icon: 'shield-check', cls: 'grn', t: t.tc2T, x: t.tc2X },
+  { icon: 'eye-off', cls: 'yel', t: t.tc3T, x: t.tc3X },
+  { icon: 'heart-handshake', cls: 'red', t: t.tc4T, x: t.tc4X },
+];
+---
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="container hero-inner">
+    <p class="hero-eyebrow"><span class="ping"></span>{t.heroEyebrow}</p>
+    <h1>{t.heroT1}<span class="accentY">{t.heroT2}</span></h1>
+    <p class="hero-sub">{t.heroSub}</p>
+    <div class="hero-actions">
+      <a class="btn btn-yellow" href={L(paths.casos)}><Icon name="shield-check" />{t.heroCtaCasos}</a>
+      <a class="btn hero-ghost" href={L(paths.empleos)}><Icon name="briefcase" />{t.heroCtaEmpleos}</a>
+      <a class="btn hero-plain" href={L(paths.como)}>{t.heroCtaComo}</a>
+    </div>
+    <div class="hero-trust">
+      <span><Icon name="shield-check" size={15} />{t.trust1}</span>
+      <span><Icon name="eye-off" size={15} />{t.trust2}</span>
+      <span><Icon name="lock" size={15} />{t.trust3}</span>
+    </div>
+  </div>
+</section>
+
+<!-- MENSAJE CLAVE -->
+<section class="message">
+  <div class="container message-inner">
+    <span class="message-mark"><img src="/assets/logo-icon.png" alt="" width="46" /></span>
+    <p>{t.mensaje1}<span class="accentY">{t.mensaje2}</span></p>
+  </div>
+</section>
+
+<!-- 3 PASOS -->
+<section class="section">
+  <div class="container">
+    <p class="eyebrow red">{t.pasosEyebrow}</p>
+    <h2 class="h2">{t.pasosH2}</h2>
+    <p class="lead pasos-lead">{t.pasosLead}</p>
+    <div class="grid grid-fit">
+      {
+        steps.map((s) => (
+          <div class="card step">
+            <div class="step-head">
+              <span class:list={['step-ico', s.cls]}>
+                <Icon name={s.icon} size={24} />
+              </span>
+              <span class="step-n">{s.n}</span>
+            </div>
+            <h3>{s.t}</h3>
+            <p>{s.x}</p>
+            <a class="step-link" href={s.href}>
+              {s.l}
+              <Icon name="arrow-right" size={16} />
+            </a>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CASOS DESTACADOS -->
+<section class="section tint">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow red">{t.casosEyebrow}</p>
+        <h2 class="h2 nomargin">{t.casosH2}</h2>
+      </div>
+      <a class="btn btn-ghost" href={L(paths.casos)}>{t.verTodos}<Icon name="arrow-right" size={16} /></a>
+    </div>
+    <div class="grid grid-cards">
+      {featuredCasos.map((caso) => <CaseCard caso={caso} lang={lang} />)}
+    </div>
+  </div>
+</section>
+
+<!-- EMPLEOS DESTACADOS -->
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow red">{t.empleosEyebrow}</p>
+        <h2 class="h2 nomargin">{t.empleosH2}</h2>
+      </div>
+      <a class="btn btn-ghost" href={L(paths.empleos)}>{t.verTodos}<Icon name="arrow-right" size={16} /></a>
+    </div>
+    <div class="grid grid-cards">
+      {featuredEmpleos.map((empleo) => <JobCard empleo={empleo} lang={lang} />)}
+    </div>
+  </div>
+</section>
+
+<!-- TRUST -->
+<section class="section tint">
+  <div class="container">
+    <div class="trust-head">
+      <p class="eyebrow acc">{t.trustEyebrow}</p>
+      <h2 class="h2">{t.trustH2}</h2>
+      <p class="trust-lead">{t.trustLead}</p>
+    </div>
+    <div class="grid trust-grid">
+      {
+        trustCards.map((c) => (
+          <div class="card trust-card">
+            <span class:list={['step-ico', c.cls]}>
+              <Icon name={c.icon} size={23} />
+            </span>
+            <h3>{c.t}</h3>
+            <p>{c.x}</p>
+          </div>
+        ))
+      }
+    </div>
+    <div class="notice">
+      <Icon name="info" size={22} class="ico" />
+      <p><strong>{t.discTitle}</strong>{t.discText}</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section">
+  <div class="container">
+    <div class="band">
+      <p class="eyebrow">{t.ctaEyebrow}</p>
+      <h2>{t.ctaH2}</h2>
+      <p>{t.ctaText}</p>
+      <div class="actions">
+        <a class="btn btn-yellow" href={L(paths.publicar)}><Icon name="plus" />{t.ctaBtn1}</a>
+        <a class="btn band-ghost" href={L(paths.como)}>{t.ctaBtn2}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .accentY {
+    color: var(--yel);
+  }
+
+  /* hero */
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: #0b1434;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background-image: url('/assets/help.avif');
+    background-size: cover;
+    background-position: center;
+  }
+  .hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg, rgba(10, 18, 48, 0.96) 0%, rgba(13, 28, 80, 0.84) 48%, rgba(13, 28, 80, 0.5) 100%);
+  }
+  .hero-inner {
+    position: relative;
+    padding-block: clamp(64px, 10vw, 120px);
+  }
+  .hero-inner > * {
+    max-width: 680px;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 20px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.26);
+    padding: 7px 14px;
+    border-radius: 999px;
+  }
+  .ping {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--yel);
+  }
+  .hero h1 {
+    font-size: clamp(36px, 5.4vw, 60px);
+    line-height: 1.08;
+    font-weight: 800;
+    letter-spacing: -0.022em;
+    color: #fff;
+    margin: 0 0 20px;
+    text-wrap: balance;
+  }
+  .hero-sub {
+    font-size: clamp(16.5px, 1.6vw, 20px);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    max-width: 54ch;
+    margin: 0 0 30px;
+  }
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .hero-ghost {
+    border-color: rgba(255, 255, 255, 0.6);
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+  }
+  .hero-ghost:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #fff;
+  }
+  .hero-plain {
+    background: transparent;
+    color: #fff;
+  }
+  .hero-plain:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: none;
+  }
+  .hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 30px;
+  }
+  .hero-trust span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 8px 14px;
+    border-radius: 999px;
+  }
+  .hero-trust :global(svg) {
+    color: var(--yel);
+  }
+
+  /* message band */
+  .message {
+    background: var(--band);
+    position: relative;
+    overflow: hidden;
+  }
+  .message-inner {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    flex-wrap: wrap;
+    padding-block: clamp(34px, 5vw, 56px);
+  }
+  .message-mark {
+    width: 66px;
+    height: 66px;
+    border-radius: 19px;
+    background: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    box-shadow: 0 12px 26px rgba(0, 0, 0, 0.2);
+  }
+  .message p {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(20px, 2.5vw, 29px);
+    line-height: 1.38;
+    font-weight: 600;
+    max-width: 36ch;
+    flex: 1 1 320px;
+  }
+
+  /* shared bits */
+  .tint {
+    background: var(--srf2);
+  }
+  .pasos-lead {
+    max-width: 56ch;
+    margin-bottom: 38px;
+  }
+  .section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 34px;
+  }
+  .nomargin {
+    margin: 0;
+  }
+
+  /* steps */
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 28px 26px;
+  }
+  .step-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .step-ico {
+    display: inline-flex;
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-ico.acc {
+    background: var(--accs);
+    color: var(--acc);
+  }
+  .step-ico.yel {
+    background: var(--yels);
+    color: var(--yelink);
+  }
+  .step-ico.grn {
+    background: var(--grns);
+    color: var(--grn);
+  }
+  .step-ico.red {
+    background: var(--reds);
+    color: var(--red);
+  }
+  .step-n {
+    font-size: 38px;
+    font-weight: 800;
+    color: var(--srf2);
+    line-height: 1;
+  }
+  .step h3 {
+    font-size: 19px;
+    font-weight: 700;
+    color: var(--acc);
+    margin: 6px 0 0;
+  }
+  .step p {
+    margin: 0;
+    color: var(--txs);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .step-link {
+    margin-top: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--acc);
+    font-weight: 600;
+    font-size: 14.5px;
+  }
+  .step-link:hover {
+    gap: 10px;
+  }
+
+  /* trust */
+  .trust-head {
+    text-align: center;
+    max-width: 60ch;
+    margin: 0 auto 40px;
+  }
+  .trust-lead {
+    font-size: clamp(16px, 1.5vw, 18px);
+    line-height: 1.6;
+    color: var(--txs);
+    margin: 0;
+  }
+  .trust-grid {
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    margin-bottom: 30px;
+  }
+  .trust-card {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+  }
+  .trust-card .step-ico {
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+  }
+  .trust-card h3 {
+    font-size: 16.5px;
+    font-weight: 700;
+    color: var(--txt);
+    margin: 4px 0 0;
+  }
+  .trust-card p {
+    margin: 0;
+    color: var(--txm);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .band-ghost {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.55);
+    color: #fff;
+  }
+  .band-ghost:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: #fff;
+  }
+</style>

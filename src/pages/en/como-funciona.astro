@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Como from '../../components/views/Como.astro';
+import { useStrings } from '../../data/strings';
+const lang = 'en' as const;
+const t = useStrings(lang);
+---
+
+<BaseLayout title={t.comoH1} description={t.comoLead} lang={lang}>
+  <Como lang={lang} />
+</BaseLayout>
